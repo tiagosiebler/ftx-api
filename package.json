@@ -19,8 +19,7 @@
     "betapublish": "npm publish --tag beta"
   },
   "author": "Tiago Siebler (https://github.com/tiagosiebler)",
-  "contributors": [
-  ],
+  "contributors": [],
   "dependencies": {
     "axios": "^0.21.0",
     "isomorphic-ws": "^4.0.1",
