@@ -202,6 +202,10 @@ ws.on('error', err => {
 
 See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
+## Examples
+
+More demonstrations can be found in the [examples](./examples/) folder.
+
 ---
 
 ## Customise Logging
