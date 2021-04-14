@@ -1,6 +1,39 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
-import { signMessage, serializeParams, RestClientOptions, GenericAPIResponse, isPublicEndpoint } from './requestUtils';
+import { signMessage, serializeParams, RestClientOptions, GenericAPIResponse, FtxDomain } from './requestUtils';
+
+type ApiHeaders = 'key' | 'ts' | 'sign' | 'subaccount';
+
+const getHeader = (headerId: ApiHeaders, domain: FtxDomain = 'ftxcom'): string => {
+  if (domain === 'ftxcom') {
+    switch (headerId) {
+      case 'key':
+        return 'FTX-KEY';
+      case 'ts':
+        return 'FTX-TS';
+      case 'sign':
+        return 'FTX-SIGN';
+      case 'subaccount':
+        return 'FTX-SUBACCOUNT';
+    }
+  }
+
+  if (domain === 'ftxus') {
+    switch (headerId) {
+      case 'key':
+        return 'FTXUS-KEY';
+      case 'ts':
+        return 'FTXUS-TS';
+      case 'sign':
+        return 'FTXUS-SIGN';
+      case 'subaccount':
+        return 'FTXUS-SUBACCOUNT';
+    }
+  }
+
+  console.warn('No matching header name: ', { headerId, domain  });
+  return 'null';
+}
 
 export default class RequestUtil {
   private timeOffset: number | null;
@@ -38,12 +71,12 @@ export default class RequestUtil {
       ...requestOptions,
       // FTX requirements
       headers: {
-        'FTX-KEY': key,
+        [getHeader('key', options.domain)]: key,
       },
     };
 
     if (typeof this.options.subAccountName === 'string') {
-      this.globalRequestOptions.headers['FTX-SUBACCOUNT'] = this.options.subAccountName;
+      this.globalRequestOptions.headers[getHeader('subaccount', options.domain)] = this.options.subAccountName;
     }
 
     this.baseUrl = baseUrl;
@@ -92,8 +125,8 @@ export default class RequestUtil {
       }
 
       const { timestamp, sign } = this.getRequestSignature(method, endpoint, this.secret, params);
-      options.headers['FTX-TS'] = String(timestamp);
-      options.headers['FTX-SIGN'] = sign;
+      options.headers[getHeader('ts', this.options.domain)] = String(timestamp);
+      options.headers[getHeader('sign', this.options.domain)] = sign;
     }
 
     if (method === 'GET') {

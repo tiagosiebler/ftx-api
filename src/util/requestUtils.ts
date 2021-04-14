@@ -1,4 +1,8 @@
+import { AxiosRequestConfig } from 'axios';
 import { createHmac } from 'crypto';
+
+
+export type FtxDomain = 'ftxcom' | 'ftxus';
 
 export interface RestClientOptions {
   // override the max size of the request window (in ms)
@@ -14,7 +18,7 @@ export interface RestClientOptions {
   strict_param_validation?: boolean;
 
   // Optionally override API protocol + domain
-  // e.g 'https://api.bytick.com'
+  // e.g 'https://ftx.us/api'
   baseUrl?: string;
 
   // Default: true. whether to try and post-process request exceptions.
@@ -22,6 +26,9 @@ export interface RestClientOptions {
 
   // Subaccount nickname URI-encoded
   subAccountName?: string;
+
+  // Default: 'ftxcom'. Choose between ftxcom or ftxus.
+  domain?: FtxDomain;
 }
 
 export interface WSClientConfigurableOptions {
@@ -35,10 +42,21 @@ export interface WSClientConfigurableOptions {
   pongTimeout?: number;
   pingInterval?: number;
   reconnectTimeout?: number;
-  restOptions?: any;
-  requestOptions?: any;
+  restOptions?: RestClientOptions;
+  requestOptions?: AxiosRequestConfig;
 
+  // Optionally override websocket API protocol + domain
+  // E.g: 'wss://ftx.com/ws/'
   wsUrl?: string;
+
+  // Default: 'ftxcom'. Choose between ftxcom or ftxus.
+  domain?: FtxDomain;
+};
+
+export interface WebsocketClientOptions extends WSClientConfigurableOptions {
+  pongTimeout: number;
+  pingInterval: number;
+  reconnectTimeout: number;
 };
 
 export type GenericAPIResponse = Promise<any>;
@@ -68,12 +86,30 @@ export function serializeParams(params: object = {}, strict_validation = false):
     .join('&');
 };
 
+export type apiNetwork = 'ftxcom' | 'ftxus';
+
 export function getRestBaseUrl(restClientOptions: RestClientOptions) {
   if (restClientOptions.baseUrl) {
     return restClientOptions.baseUrl;
   }
 
+  if (restClientOptions.domain === 'ftxus') {
+    return 'https://ftx.us/api';
+  }
+
   return 'https://ftx.com/api';
+};
+
+export function getWsUrl(options: WebsocketClientOptions): string {
+  if (options.wsUrl) {
+    return options.wsUrl;
+  }
+
+  if (options.domain === 'ftxus') {
+    return 'wss://ftx.us/ws/';
+  }
+
+  return 'wss://ftx.com/ws/';
 };
 
 export function isPublicEndpoint (endpoint: string): boolean {
