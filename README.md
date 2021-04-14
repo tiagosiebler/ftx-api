@@ -58,7 +58,7 @@ const restClientOptions = {
   strict_param_validation?: boolean;
 
   // Optionally override API protocol + domain
-  // e.g 'https://api.bytick.com'
+  // e.g 'https://ftx.us/api'
   baseUrl?: string;
 
   // Default: true. whether to try and post-process request exceptions.
@@ -71,7 +71,7 @@ const restClientOptions = {
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
 
-const client = new InverseClient(
+const client = new RestClient(
   API_KEY,
   PRIVATE_KEY,
 
@@ -236,6 +236,9 @@ Build a bundle using webpack:
 The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
 
 ---
+
+## FTX.US
+This client also supports the US FTX exchange. Simply set the "domain" to "ftxus" in both the RestClient and the WebsocketClient. See [examples/ftxus.ts](./examples/ftxus.ts) for a demonstration.
 
 ## Contributions & Thanks
 ### Donations
