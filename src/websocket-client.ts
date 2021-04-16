@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { RestClient } from './rest-client';
 import { DefaultLogger } from './logger';
-import { signMessage, serializeParams, signWsAuthenticate, WSClientConfigurableOptions } from './util/requestUtils';
+import { signMessage, serializeParams, signWsAuthenticate, WSClientConfigurableOptions, getWsUrl, WebsocketClientOptions } from './util/requestUtils';
 
 import WebSocket from 'isomorphic-ws';
 import WsStore from './util/WsStore';
@@ -23,14 +23,7 @@ export enum WsConnectionState {
   READY_STATE_RECONNECTING
 };
 
-export interface WebsocketClientOptions extends WSClientConfigurableOptions {
-  pongTimeout: number;
-  pingInterval: number;
-  reconnectTimeout: number;
-};
-
 export const wsKeyGeneral = 'ftx';
-export const wsBaseUrl = 'wss://ftx.com/ws/';
 
 export declare interface WebsocketClient {
   on(event: 'open' | 'reconnected', listener: ({ wsKey: string, event: any }) => void): this;
@@ -62,6 +55,13 @@ export class WebsocketClient extends EventEmitter {
       reconnectTimeout: 500,
       ...options
     };
+
+    if (options.domain != this.options.restOptions?.domain) {
+      this.options.restOptions = {
+        ...this.options.restOptions,
+        domain: options.domain
+      };
+    }
 
     this.restClient = new RestClient(undefined, undefined, this.options.restOptions, this.options.requestOptions);
   }
@@ -149,7 +149,7 @@ export class WebsocketClient extends EventEmitter {
         this.setWsState(wsKey, READY_STATE_CONNECTING);
       }
 
-      const url = this.getWsUrl(wsKey);
+      const url = getWsUrl(this.options);
       const ws = this.connectToWsUrl(url, wsKey);
 
       return this.wsStore.setWs(wsKey, ws);
@@ -388,14 +388,6 @@ export class WebsocketClient extends EventEmitter {
 
   private setWsState(wsKey: string, state: WsConnectionState) {
     this.wsStore.setConnectionState(wsKey, state);
-  }
-
-  private getWsUrl(wsKey?: string): string {
-    if (this.options.wsUrl) {
-      return this.options.wsUrl;
-    }
-
-    return wsBaseUrl;
   }
 
   private getWsKeyForTopic(topic: any) {
