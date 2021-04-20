@@ -92,8 +92,8 @@ export class RestClient {
     marketName: string;
     depth?: number;
   }): GenericAPIResponse {
-    const suffix = params.depth ? `depth=${params.depth}` : '';
-    return this.requestWrapper.get(`markets/${params.marketName}/orderbook?${suffix}`);
+    const suffix = params.depth ? `?depth=${params.depth}` : '';
+    return this.requestWrapper.get(`markets/${params.marketName}/orderbook${suffix}`);
   }
 
   getTrades(params: {
@@ -168,8 +168,8 @@ export class RestClient {
   }
 
   getPositions(showAveragePrice?: boolean): GenericAPIResponse {
-    const suffix = showAveragePrice ? 'showAvgPrice=true' : '';
-    return this.requestWrapper.get(`positions?${suffix}`);
+    const suffix = showAveragePrice ? '?showAvgPrice=true' : '';
+    return this.requestWrapper.get(`positions${suffix}`);
   }
 
   setAccountLeverage(leverage: number): GenericAPIResponse {
@@ -199,8 +199,8 @@ export class RestClient {
     coin: string;
     method?: string;
   }): GenericAPIResponse {
-    const suffix = params.method ? `method=${params.method}` : '';
-    return this.requestWrapper.get(`wallet/deposit_address/${params.coin}?${suffix}`);
+    const suffix = params.method ? `?method=${params.method}` : '';
+    return this.requestWrapper.get(`wallet/deposit_address/${params.coin}${suffix}`);
   }
 
   getDepositHistory(params?: {
@@ -264,8 +264,8 @@ export class RestClient {
   **/
 
   getOpenOrders(market?: string): GenericAPIResponse {
-    const suffix = market ? `market=${market}` : '';
-    return this.requestWrapper.get(`orders?${suffix}`);
+    const suffix = market ? `?market=${market}` : '';
+    return this.requestWrapper.get(`orders${suffix}`);
   }
 
   getOrderHistory(params?: {
@@ -406,8 +406,8 @@ export class RestClient {
   }
 
   getQuoteStatus(quoteId: string, market?: string): GenericAPIResponse {
-    const suffix = market ? `market=${market}` : '';
-    return this.requestWrapper.get(`otc/quotes/${quoteId}?${suffix}`);
+    const suffix = market ? `?market=${market}` : '';
+    return this.requestWrapper.get(`otc/quotes/${quoteId}${suffix}`);
   }
 
   acceptQuote(quoteId: string): GenericAPIResponse {
@@ -434,8 +434,8 @@ export class RestClient {
   }
 
   getMarketInfo(market?: string): GenericAPIResponse {
-    const suffix = market ? `market=${market}` : '';
-    return this.requestWrapper.get(`spot_margin/market_info?${suffix}`);
+    const suffix = market ? `?market=${market}` : '';
+    return this.requestWrapper.get(`spot_margin/market_info${suffix}`);
   }
 
   getBorrowHistory(): GenericAPIResponse {
