@@ -160,7 +160,7 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private requestTryAuthenticate(wsKey: string) {
-    const { key, secret } = this.options;
+    const { key, secret, subAccountName } = this.options;
     if (!key || !secret) {
       this.logger.debug(`Connection "${wsKey}" will remain unauthenticated due to missing key/secret`);
       return;
@@ -171,6 +171,7 @@ export class WebsocketClient extends EventEmitter {
       key,
       signWsAuthenticate(timestamp, secret),
       timestamp,
+      subAccountName,
     );
     this.tryWsSend(wsKey, JSON.stringify(authMsg));
   }
