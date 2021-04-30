@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { RestClient } from './rest-client';
 import { DefaultLogger } from './logger';
-import { signMessage, serializeParams, signWsAuthenticate, WSClientConfigurableOptions, getWsUrl, WebsocketClientOptions } from './util/requestUtils';
+import { signMessage, signWsAuthenticate, WSClientConfigurableOptions, getWsUrl, WebsocketClientOptions } from './util/requestUtils';
 
 import WebSocket from 'isomorphic-ws';
 import WsStore from './util/WsStore';
@@ -31,8 +31,9 @@ export declare interface WebsocketClient {
   on(event: 'reconnect' | 'close', listener: () => void): this;
 };
 
+export type WsChannel = 'orderbook' | 'orderbookGrouped' | 'markets' | 'trades' | 'ticker' | 'fills' | 'orders' | string;
 export interface WsTopic {
-  channel: string;
+  channel: WsChannel;
   grouping?: number;
   market?: string;
 };
@@ -73,8 +74,12 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Add topic/topics to WS subscription list
    */
-  public subscribe(wsTopics: WsTopic[] | WsTopic | string[] | string) {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+  public subscribe(wsTopics: WsTopic[] | WsTopic | WsChannel[] | WsChannel) {
+    const mixedTopics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    const topics = mixedTopics.map(topic => {
+      return typeof topic === 'string' ? { channel: topic } : topic;
+    });
+
     topics.forEach(topic => this.wsStore.addTopic(
       this.getWsKeyForTopic(topic),
       topic
@@ -84,7 +89,7 @@ export class WebsocketClient extends EventEmitter {
     this.wsStore.getKeys().forEach(wsKey => {
       // if connected, send subscription request
       if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTED)) {
-        return this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
+        return this.requestSubscribeTopics(wsKey, topics);
       }
 
       // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
@@ -100,8 +105,12 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Remove topic/topics from WS subscription list
    */
-  public unsubscribe(wsTopics: WsTopic[] | WsTopic | string[] | string) {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+  public unsubscribe(wsTopics: WsTopic[] | WsTopic | WsChannel[] | WsChannel) {
+    const mixedTopics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    const topics = mixedTopics.map(topic => {
+      return typeof topic === 'string' ? { channel: topic } : topic;
+    });
+
     topics.forEach(topic => this.wsStore.deleteTopic(
       this.getWsKeyForTopic(topic),
       topic
@@ -110,7 +119,7 @@ export class WebsocketClient extends EventEmitter {
     this.wsStore.getKeys().forEach(wsKey => {
       // unsubscribe request only necessary if active connection exists
       if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTED)) {
-        this.requestUnsubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)])
+        this.requestUnsubscribeTopics(wsKey, topics)
       }
     });
   }
@@ -272,8 +281,6 @@ export class WebsocketClient extends EventEmitter {
    * Send WS message to subscribe to topics.
    */
   private requestSubscribeTopics(wsKey: string, topics: WsTopic[]) {
-    const market = '';
-
     topics.forEach(topic => {
       const wsMessage = JSON.stringify({
         op: 'subscribe',

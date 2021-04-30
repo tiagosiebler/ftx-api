@@ -1,4 +1,4 @@
-import { WsConnectionState, WsTopic } from '../websocket-client';
+import { WsChannel, WsConnectionState, WsTopic } from '../websocket-client';
 import { DefaultLogger } from '../logger';
 
 import WebSocket from 'isomorphic-ws';
@@ -15,6 +15,15 @@ interface WsStoredState {
   activePongTimer?: NodeJS.Timeout | undefined;
   subscribedTopics: WsTopicList;
 };
+
+function isDeepObjectMatch(object1: any, object2: any) {
+  for (const key in object1) {
+    if (object1[key] !== object2[key]) {
+      return false;
+    }
+  }
+  return true;
+}
 
 export default class WsStore {
   private wsState: {
@@ -65,7 +74,7 @@ export default class WsStore {
 
   /* connection websocket */
 
-  hasExistingActiveConnection(key) {
+  hasExistingActiveConnection(key: string) {
     return this.get(key) && this.isWsOpen(key);
   }
 
@@ -114,17 +123,36 @@ export default class WsStore {
     return result;
   }
 
-  addTopic(key: string, topic: WsTopic | string) {
+  // Since topics are objects we can't rely on the set to detect duplicates
+  getMatchingTopic(key: string, topic: WsTopic | WsChannel) {
+    if (typeof topic === 'string') {
+      return this.getMatchingTopic(key, { channel: topic });
+    }
+
+    const allTopics = this.getTopics(key).values();
+    for (const storedTopic of allTopics) {
+      if (isDeepObjectMatch(topic, storedTopic)) {
+        return storedTopic;
+      }
+    }
+  }
+
+  addTopic(key: string, topic: WsTopic | WsChannel) {
     if (typeof topic === 'string') {
       return this.addTopic(key, { channel: topic });
+    }
+    if (this.getMatchingTopic(key, topic)) {
+      return this.getTopics(key);
     }
     return this.getTopics(key).add(topic);
   }
 
-  deleteTopic(key: string, topic: WsTopic | string) {
-    if (typeof topic === 'string') {
-      return this.addTopic(key, { channel: topic });
+  deleteTopic(key: string, topic: WsTopic | WsChannel) {
+    const storedTopic = this.getMatchingTopic(key, topic);
+    if (storedTopic) {
+      this.getTopics(key).delete(storedTopic);
     }
-    return this.getTopics(key).delete(topic);
+
+    return this.getTopics(key);
   }
 }
