@@ -174,11 +174,11 @@ export default class RequestUtil {
     };
   }
 
-  getRequestSignature(
+  private getRequestSignature(
     method: Method,
     endpoint: string,
-    secret: string | undefined,
-    params: string | object = ''
+    secret?: string | undefined,
+    params?: string | object
   ): { timestamp: number; sign: string; } {
     const timestamp = Date.now() + (this.timeOffset || 0);
     if (!secret) {
@@ -188,7 +188,10 @@ export default class RequestUtil {
       };
     }
 
-    const paramsPayload = method == 'GET' ? params : JSON.stringify(params);
+    const paramsPayload = method === 'GET'
+      ? params
+      : params ? JSON.stringify(params) : '';
+
     const signature_payload = `${timestamp}${method}/api/${endpoint}${paramsPayload}`;
     return {
       timestamp,
