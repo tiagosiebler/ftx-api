@@ -99,7 +99,7 @@ export default class RequestUtil {
   }
 
   post(endpoint: string, params?: any): GenericAPIResponse {
-    return this._call('POST', endpoint, { ...params, externalReferralProgram: this.programId });
+    return this._call('POST', endpoint, { externalReferralProgram: this.programId, ...params });
   }
 
   delete(endpoint: string, params?: any): GenericAPIResponse {
