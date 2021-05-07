@@ -177,8 +177,8 @@ export default class RequestUtil {
   private getRequestSignature(
     method: Method,
     endpoint: string,
-    secret?: string | undefined,
-    params?: string | object
+    secret: string | undefined,
+    params: string | object = ''
   ): { timestamp: number; sign: string; } {
     const timestamp = Date.now() + (this.timeOffset || 0);
     if (!secret) {
