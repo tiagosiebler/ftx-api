@@ -1,7 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { createHmac } from 'crypto';
 
-
 export type FtxDomain = 'ftxcom' | 'ftxus';
 
 export interface RestClientOptions {
@@ -86,7 +85,22 @@ export function serializeParams(params: object = {}, strict_validation = false):
     .join('&');
 };
 
+export function serializeParamPayload(isGetRequest: boolean, params?: string | object, strictParamValidation?: boolean): string | undefined {
+  if (!params) {
+    return '';
+  }
+  if (!isGetRequest) {
+    return JSON.stringify(params);
+  }
+  if (typeof params === 'string') {
+    return '?' + params;
+  }
+  return '?' + serializeParams(params, strictParamValidation);
+};
+
 export type apiNetwork = 'ftxcom' | 'ftxus';
+export const programId = 'ftxnodeapi';
+export const programKey = 'externalReferralProgram';
 
 export function getRestBaseUrl(restClientOptions: RestClientOptions) {
   if (restClientOptions.baseUrl) {
@@ -112,7 +126,7 @@ export function getWsUrl(options: WebsocketClientOptions): string {
   return 'wss://ftx.com/ws/';
 };
 
-export function isPublicEndpoint (endpoint: string): boolean {
+export function isPublicEndpoint(endpoint: string): boolean {
   if (endpoint.startsWith('https')) {
     return true;
   }

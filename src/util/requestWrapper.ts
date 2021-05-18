@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
-import { signMessage, serializeParams, RestClientOptions, GenericAPIResponse, FtxDomain } from './requestUtils';
+import { signMessage, serializeParams, RestClientOptions, GenericAPIResponse, FtxDomain, serializeParamPayload, programId, programKey } from './requestUtils';
 
 type ApiHeaders = 'key' | 'ts' | 'sign' | 'subaccount';
 
@@ -38,7 +38,6 @@ const getHeader = (headerId: ApiHeaders, domain: FtxDomain = 'ftxcom'): string =
 export default class RequestUtil {
   private timeOffset: number | null;
   private syncTimePromise: null | Promise<any>;
-  private programId: string;
   private options: RestClientOptions;
   private baseUrl: string;
   private globalRequestOptions: AxiosRequestConfig;
@@ -54,7 +53,6 @@ export default class RequestUtil {
   ) {
     this.timeOffset = null;
     this.syncTimePromise = null;
-    this.programId = 'ftxnodeapi';
     this.options = {
       recv_window: 5000,
       // how often to sync time drift with exchange servers
@@ -99,7 +97,7 @@ export default class RequestUtil {
   }
 
   post(endpoint: string, params?: any): GenericAPIResponse {
-    return this._call('POST', endpoint, { externalReferralProgram: this.programId, ...params });
+    return this._call('POST', endpoint, { ...params, [programKey]: programId });
   }
 
   delete(endpoint: string, params?: any): GenericAPIResponse {
@@ -118,19 +116,22 @@ export default class RequestUtil {
 
     options.url = endpoint.startsWith('https') ? endpoint : [this.baseUrl, endpoint].join('/');
 
+    const isGetRequest = method === 'GET';
+    const serialisedParams = serializeParamPayload(isGetRequest, params, this.options.strict_param_validation);
+
     // Add request sign
     if (this.key && this.secret) {
       if (this.timeOffset === null && !this.options.disable_time_sync) {
         await this.syncTime();
       }
 
-      const { timestamp, sign } = this.getRequestSignature(method, endpoint, this.secret, params);
+      const { timestamp, sign } = this.getRequestSignature(method, endpoint, this.secret, serialisedParams);
       options.headers[getHeader('ts', this.options.domain)] = String(timestamp);
       options.headers[getHeader('sign', this.options.domain)] = sign;
     }
 
-    if (method === 'GET') {
-      options.params = params;
+    if (isGetRequest) {
+      options.url += serialisedParams;
     } else {
       options.data = params;
     }
@@ -178,7 +179,7 @@ export default class RequestUtil {
     method: Method,
     endpoint: string,
     secret: string | undefined,
-    params: string | object = ''
+    serialisedParams: string= ''
   ): { timestamp: number; sign: string; } {
     const timestamp = Date.now() + (this.timeOffset || 0);
     if (!secret) {
@@ -188,11 +189,8 @@ export default class RequestUtil {
       };
     }
 
-    const paramsPayload = method === 'GET'
-      ? params
-      : params ? JSON.stringify(params) : '';
+    const signature_payload = `${timestamp}${method}/api/${endpoint}${serialisedParams}`;
 
-    const signature_payload = `${timestamp}${method}/api/${endpoint}${paramsPayload}`;
     return {
       timestamp,
       sign: signMessage(signature_payload, secret)
