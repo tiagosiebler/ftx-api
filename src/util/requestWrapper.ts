@@ -65,13 +65,14 @@ export default class RequestUtil {
     this.globalRequestOptions = {
       // in ms == 5 minutes by default
       timeout: 1000 * 60 * 5,
+      headers: { },
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
       ...requestOptions,
-      // FTX requirements
-      headers: {
-        [getHeader('key', options.domain)]: key,
-      },
     };
+
+    if (typeof key === 'string') {
+      this.globalRequestOptions.headers[getHeader('key', options.domain)] = key;
+    }
 
     if (typeof this.options.subAccountName === 'string') {
       this.globalRequestOptions.headers[getHeader('subaccount', options.domain)] = this.options.subAccountName;
@@ -80,7 +81,7 @@ export default class RequestUtil {
     this.baseUrl = baseUrl;
 
     if (key && !secret) {
-      throw new Error('API Key & Secret are both required for private enpoints')
+      throw new Error('API Key & Secret are both required for private endpoints')
     }
 
     if (this.options.disable_time_sync !== true) {
