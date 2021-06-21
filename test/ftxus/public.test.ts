@@ -1,14 +1,10 @@
 import { RestClient } from "../../src/rest-client";
+import { successResponseList } from "../response.util";
 
 describe('FTX.us public endpoints', () => {
   const api = new RestClient(undefined, undefined, {
     domain: 'ftxus',
   });
-
-  const successfulRespondData = {
-    "result": expect.any(Array),
-    "success": true
-  };
 
   const publicMethods = [
     'getMarkets',
@@ -19,7 +15,7 @@ describe('FTX.us public endpoints', () => {
 
   publicMethods.forEach((method: string) => {
     it(`public method ${method}() returns data`, async () => {
-      expect(await api[method]()).toMatchObject(successfulRespondData);
+      expect(await api[method]()).toMatchObject(successResponseList());
     });
   });
 
