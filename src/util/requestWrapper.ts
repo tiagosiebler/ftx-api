@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
-import { signMessage, serializeParams, RestClientOptions, GenericAPIResponse, FtxDomain, serializeParamPayload, programId, programKey } from './requestUtils';
+import { signMessage } from './node-support';
+import { serializeParams, RestClientOptions, GenericAPIResponse, FtxDomain, serializeParamPayload, programId, programKey } from './requestUtils';
 
 type ApiHeaders = 'key' | 'ts' | 'sign' | 'subaccount';
 
@@ -126,7 +127,7 @@ export default class RequestUtil {
         await this.syncTime();
       }
 
-      const { timestamp, sign } = this.getRequestSignature(method, endpoint, this.secret, serialisedParams);
+      const { timestamp, sign } = await this.getRequestSignature(method, endpoint, this.secret, serialisedParams);
       options.headers[getHeader('ts', this.options.domain)] = String(timestamp);
       options.headers[getHeader('sign', this.options.domain)] = sign;
     }
@@ -176,12 +177,12 @@ export default class RequestUtil {
     };
   }
 
-  private getRequestSignature(
+  private async getRequestSignature(
     method: Method,
     endpoint: string,
     secret: string | undefined,
     serialisedParams: string= ''
-  ): { timestamp: number; sign: string; } {
+  ): Promise<{ timestamp: number; sign: string; }> {
     const timestamp = Date.now() + (this.timeOffset || 0);
     if (!secret) {
       return {
@@ -194,14 +195,14 @@ export default class RequestUtil {
 
     return {
       timestamp,
-      sign: signMessage(signature_payload, secret)
+      sign: await signMessage(signature_payload, secret)
     };
   }
 
   /**
    * @private sign request and set recv window
    */
-  signRequest(data: any): any {
+  signRequest(data: any): Promise<any> {
     const params = {
       ...data,
       api_key: this.key,
