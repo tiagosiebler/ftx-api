@@ -1,5 +1,4 @@
 import { AxiosRequestConfig } from 'axios';
-import { createHmac } from 'crypto';
 
 export type FtxDomain = 'ftxcom' | 'ftxus';
 
@@ -59,18 +58,6 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
 };
 
 export type GenericAPIResponse = Promise<any>;
-
-export function signMessage(message: string, secret: string): string {
-  return createHmac('sha256', secret)
-    .update(message)
-    .digest('hex');
-};
-
-export function signWsAuthenticate(timestamp: number, secret: string): string {
-  return createHmac('sha256', secret)
-  .update(timestamp + 'websocket_login')
-  .digest('hex');
-};
 
 export function serializeParams(params: object = {}, strict_validation = false): string {
   return Object.keys(params)

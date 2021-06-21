@@ -1,11 +1,12 @@
 import { EventEmitter } from 'events';
 import { RestClient } from './rest-client';
 import { DefaultLogger } from './logger';
-import { signMessage, signWsAuthenticate, WSClientConfigurableOptions, getWsUrl, WebsocketClientOptions } from './util/requestUtils';
+import { WSClientConfigurableOptions, getWsUrl, WebsocketClientOptions } from './util/requestUtils';
 
 import WebSocket from 'isomorphic-ws';
 import WsStore from './util/WsStore';
 import { getWsAuthMessage, isWsPong } from './util/wsMessages';
+import { signMessage, signWsAuthenticate } from './util/node-support';
 
 const loggerCategory = { category: 'ftx-ws' };
 
@@ -168,7 +169,7 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  private requestTryAuthenticate(wsKey: string) {
+  private async requestTryAuthenticate(wsKey: string) {
     const { key, secret, subAccountName } = this.options;
     if (!key || !secret) {
       this.logger.debug(`Connection "${wsKey}" will remain unauthenticated due to missing key/secret`);
@@ -178,7 +179,7 @@ export class WebsocketClient extends EventEmitter {
     const timestamp = new Date().getTime();
     const authMsg = getWsAuthMessage(
       key,
-      signWsAuthenticate(timestamp, secret),
+      await signWsAuthenticate(timestamp, secret),
       timestamp,
       subAccountName,
     );
@@ -327,7 +328,7 @@ export class WebsocketClient extends EventEmitter {
     return ws;
   }
 
-  private onWsOpen(event, wsKey: string) {
+  private async onWsOpen(event, wsKey: string) {
     if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING)) {
       this.logger.info('Websocket connected', { ...loggerCategory, wsKey, livenet: this.isLivenet() });
       this.emit('open', { wsKey, event });
@@ -338,7 +339,7 @@ export class WebsocketClient extends EventEmitter {
 
     this.setWsState(wsKey, READY_STATE_CONNECTED);
 
-    this.requestTryAuthenticate(wsKey);
+    await this.requestTryAuthenticate(wsKey);
     this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
 
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
