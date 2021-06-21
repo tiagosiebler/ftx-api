@@ -26,6 +26,6 @@ jobs:
           command: npm run test
 
 workflows:
-  orb-free-workflow:
+  integrationtests:
     jobs:
       - test

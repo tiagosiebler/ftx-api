@@ -2,6 +2,8 @@
 [![npm version](https://img.shields.io/npm/v/ftx-api)][1] [![npm size](https://img.shields.io/bundlephobia/min/ftx-api/latest)][1] [![npm downloads](https://img.shields.io/npm/dt/ftx-api)][1]
 [![last commit](https://img.shields.io/github/last-commit/tiagosiebler/ftx-api)][1]
 [![CodeFactor](https://www.codefactor.io/repository/github/tiagosiebler/ftx-api/badge)](https://www.codefactor.io/repository/github/tiagosiebler/ftx-api)
+[![Tests](https://circleci.com/gh/tiagosiebler/ftx-api.svg?style=shield)](https://circleci.com/gh/tiagosiebler/ftx-api)
+
 
 [1]: https://www.npmjs.com/package/ftx-api
 
