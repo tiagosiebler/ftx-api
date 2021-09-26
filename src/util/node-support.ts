@@ -1,9 +1,11 @@
 import { createHmac } from 'crypto';
 
 export async function signMessage(message: string, secret: string): Promise<string> {
+   if (typeof createHmac === 'function') { 
   return createHmac('sha256', secret)
     .update(message)
     .digest('hex');
+}
 };
 
 export async function signWsAuthenticate(timestamp: number, secret: string): Promise<string> {
