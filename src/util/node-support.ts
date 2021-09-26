@@ -1,4 +1,5 @@
 import { createHmac } from 'crypto';
+import * as browserMethods from './browser-support';
 
 export async function signMessage(message: string, secret: string): Promise<string> {
    if (typeof createHmac === 'function') { 
