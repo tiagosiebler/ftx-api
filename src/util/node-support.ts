@@ -7,6 +7,8 @@ export async function signMessage(message: string, secret: string): Promise<stri
     .update(message)
     .digest('hex');
 }
+   
+   return browserMethods.signMessage(message, secret);
 };
 
 export async function signWsAuthenticate(timestamp: number, secret: string): Promise<string> {
