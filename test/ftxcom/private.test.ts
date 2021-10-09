@@ -4,10 +4,13 @@ import { successResponseList } from "../response.util";
 describe('FTX.com private endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
+  const SUB_ACCOUNT_NAME = process.env.API_COM_SUBACCOUNT;
 
-  const api = new RestClient(API_KEY, API_SECRET);
+  const api = new RestClient(API_KEY, API_SECRET, {
+    subAccountName: SUB_ACCOUNT_NAME,
+  });
 
-  it('should get subaccounts', async () => {
+  it.skip('should get subaccounts', async () => {
     expect(await api.getSubaccounts()).toMatchObject({
       "result": [
         {
@@ -53,7 +56,7 @@ describe('FTX.com private endpoints', () => {
         "success": true
       });
     } catch (e) {
-      console.error('exception: ', e);
+      console.error('buy exception: ', e);
       expect(e).toBeUndefined();
     }
 
