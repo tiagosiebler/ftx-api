@@ -679,7 +679,7 @@ export class RestClient {
   }
 
   getNftInfo(nftId: number): GenericAPIResponse {
-    return this.requestWrapper.get(`nft/${nftId}`)
+    return this.requestWrapper.get(`nft/${nftId}`);
   }
 
   getNftTrades(nftId: number, params?: {
@@ -697,15 +697,15 @@ export class RestClient {
   }
 
   getNftAccountInfo(nftId: number): GenericAPIResponse {
-    return this.requestWrapper.get(`/nft/${nftId}/account_info`)
+    return this.requestWrapper.get(`/nft/${nftId}/account_info`);
   }
 
   getNftCollections(): GenericAPIResponse {
-    return this.requestWrapper.get('nft/collections')
+    return this.requestWrapper.get('nft/collections');
   }
 
   getNftBalances(): GenericAPIResponse {
-    return this.requestWrapper.get('nft/balances')
+    return this.requestWrapper.get('nft/balances');
   }
 
   makeNftOffer(params: {
