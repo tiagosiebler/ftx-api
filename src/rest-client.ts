@@ -669,6 +669,131 @@ export class RestClient {
   }
 
   /**
+*
+* NFT Endpoints
+* https://docs.ftx.com/#nfts
+*
+**/
+  listNfts(): GenericAPIResponse {
+    return this.requestWrapper.get('nft');
+  }
+
+  getNftInfo(nftId: number): GenericAPIResponse {
+    return this.requestWrapper.get(`nft/${nftId}`);
+  }
+
+  getNftTrades(nftId: number, params?: {
+    start_time?: number;
+    end_time?: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get(`nft/${nftId}/trades`, params);
+  }
+
+  getAllNftTrades(params?: {
+    start_time?: number;
+    end_time?: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('nft/all_trades', params);
+  }
+
+  getNftAccountInfo(nftId: number): GenericAPIResponse {
+    return this.requestWrapper.get(`/nft/${nftId}/account_info`);
+  }
+
+  getNftCollections(): GenericAPIResponse {
+    return this.requestWrapper.get('nft/collections');
+  }
+
+  getNftBalances(): GenericAPIResponse {
+    return this.requestWrapper.get('nft/balances');
+  }
+
+  makeNftOffer(params: {
+    nftId: number;
+    price: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('nft/offer', params);
+  }
+
+  buyNft(params: {
+    nftId: number;
+    price: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('nft/buy', params);
+  }
+
+  createNftAuction(params: {
+    initialPrice: number;
+    reservationPrice: number;
+    duration: number
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('nft/auction', params);
+  }
+
+  editNftAuction(params: {
+    reservationPrice: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('nft/edit_auction', params);
+  }
+
+  cancelNftAuction(params: {
+    nftId: number;
+    reservationPrice: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('nft/cancel_auction', params);
+  }
+
+  placeNftBid(params: {
+    nftId: number;
+    price: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('nft/bids', params);
+  }
+
+  getNftDeposits(params: {
+    start_time: number;
+    end_time: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('nft/deposits', params);
+  }
+
+  getNftWithdrawls(params: {
+    start_time: number;
+    end_time: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('nft/withdrawls', params);
+  }
+
+  getNftFills(params: {
+    start_time: number;
+    end_time: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('nft/fills', params);
+  }
+
+  redeemNft(params: {
+    nftId: number;
+    address: string;
+    notes: string;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('nft/redeem', params);
+  }
+
+  getNftGallery(gallery_id: number): GenericAPIResponse {
+    return this.requestWrapper.get(`nft/gallery/${gallery_id}`);
+  }
+
+  getNftGallerySettings(): GenericAPIResponse {
+    return this.requestWrapper.get('nft/gallery_settings');
+  }
+
+  editNftGallerySettings(params: {
+    public: boolean;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('nft/gallery_settings', params);
+  }
+
+  /**
    * @deprecated move this somewhere else, because endpoints shouldn't be hardcoded here
    */
   async getTimeOffset(): Promise<number> {
