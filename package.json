@@ -1,7 +1,7 @@
 {
   "name": "ftx-api",
-  "version": "1.0.16",
-  "description": "Node.js connector for FTX's REST APIs and WebSockets",
+  "version": "1.0.17",
+  "description": "Node.js/typescript connector for FTX's REST APIs and WebSockets",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
