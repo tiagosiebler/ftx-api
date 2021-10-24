@@ -297,7 +297,7 @@ export class RestClient {
     orderType?: OrderType;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get(`orders`, params);
+    return this.requestWrapper.get(`conditional_orders/history`, params);
   }
 
   placeOrder(params: {
