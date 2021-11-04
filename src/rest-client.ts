@@ -474,7 +474,7 @@ export class RestClient {
     start_time?: number;
     end_time?: number;
     order?: 'asc';
-    orderId: number;
+    orderId?: number;
   }): GenericAPIResponse {
     return this.requestWrapper.get(`fills`, params);
   }
