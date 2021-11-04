@@ -35,6 +35,18 @@ export class RestClient {
   }
 
   /**
+   * Misc possible undocumented endpoints - these may not always work
+  **/
+
+  getRebateHistory() {
+    return this.requestWrapper.get('referral_rebate_history');
+  }
+
+  getAnnouncements(language: string = 'en') {
+    return this.requestWrapper.get('notifications/get_announcements?language=' + language);
+  }
+
+  /**
    *
    * Subaccount Endpoints
    * https://docs.ftx.com/#subaccounts
