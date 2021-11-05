@@ -180,7 +180,7 @@ export class RestClient {
   }
 
   getPositions(showAveragePrice?: boolean): GenericAPIResponse {
-    const suffix = showAveragePrice ? '?showAvgPrice=true' : '?showAvgPrice=false';
+    const suffix = showAveragePrice !== undefined ? `?showAvgPrice=${showAveragePrice}` : '';
     return this.requestWrapper.get(`positions${suffix}`);
   }
 
