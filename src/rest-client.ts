@@ -46,6 +46,18 @@ export class RestClient {
     return this.requestWrapper.get('notifications/get_announcements?language=' + language);
   }
 
+  requestDust(toCoin: string): GenericAPIResponse {
+    return this.requestWrapper.post(`dust/quotes`, { toCoin });
+  }
+
+  getDustStatus(quoteId: string): GenericAPIResponse {
+    return this.requestWrapper.get(`dust/quotes/${quoteId}`);
+  }
+
+  acceptDust(quoteId: string): GenericAPIResponse {
+    return this.requestWrapper.post(`dust/quotes/${quoteId}/accept`);
+  }
+
   /**
    *
    * Subaccount Endpoints
