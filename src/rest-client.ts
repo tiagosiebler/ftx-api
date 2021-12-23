@@ -426,6 +426,24 @@ export class RestClient {
   }
 
   /**
+   * 
+   * Dust
+   *
+   **/
+
+  requestDust(toCoin: string): GenericAPIResponse {
+    return this.requestWrapper.post(`dust/quotes`, { toCoin });
+  }
+
+  getDustStatus(quoteId: string): GenericAPIResponse {
+    return this.requestWrapper.get(`dust/quotes/${quoteId}`);
+  }
+
+  acceptDust(quoteId: string): GenericAPIResponse {
+    return this.requestWrapper.post(`dust/quotes/${quoteId}/accept`);
+  }
+
+  /**
    *
    * Spot Margin Endpoints
    * https://docs.ftx.com/#spot-margin
