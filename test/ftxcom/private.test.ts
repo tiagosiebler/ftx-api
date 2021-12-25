@@ -61,7 +61,7 @@ describe('FTX.com private endpoints', () => {
     }
 
     // sleep to allow order ifll
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     const balances = await api.getBalances();
     const balanceBtc = balances.result.find(bal => bal.coin === 'BTC');

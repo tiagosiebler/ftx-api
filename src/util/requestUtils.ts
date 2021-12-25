@@ -87,14 +87,19 @@ export function serializeParamPayload(isGetRequest: boolean, params?: string | o
 
 export type apiNetwork = 'ftxcom' | 'ftxus';
 export const programId = 'ftxnodeapi';
+export const programId2 = 'ftxnodeapi2';
 export const programKey = 'externalReferralProgram';
+
+export function isFtxUS(clientOptions: RestClientOptions | WebsocketClientOptions) {
+  return clientOptions.domain === 'ftxus';
+}
 
 export function getRestBaseUrl(restClientOptions: RestClientOptions) {
   if (restClientOptions.baseUrl) {
     return restClientOptions.baseUrl;
   }
 
-  if (restClientOptions.domain === 'ftxus') {
+  if (isFtxUS(restClientOptions)) {
     return 'https://ftx.us/api';
   }
 
@@ -106,7 +111,7 @@ export function getWsUrl(options: WebsocketClientOptions): string {
     return options.wsUrl;
   }
 
-  if (options.domain === 'ftxus') {
+  if (isFtxUS(options)) {
     return 'wss://ftx.us/ws/';
   }
 
@@ -125,3 +130,20 @@ export function isPublicEndpoint(endpoint: string): boolean {
   }
   return false;
 };
+
+export function parseRawWsMessage(event: MessageEvent) {
+  if (typeof event === 'string') {
+    const parsedEvent = JSON.parse(event);
+
+    if (parsedEvent.data) {
+      if (typeof parsedEvent.data === 'string') {
+        return parseRawWsMessage(parsedEvent.data);
+      }
+      return parsedEvent.data;
+    }
+  }
+  if (event?.data) {
+    return JSON.parse(event.data);
+  }
+  return event;
+}
