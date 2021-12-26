@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
 import { signMessage } from './node-support';
-import { serializeParams, RestClientOptions, GenericAPIResponse, FtxDomain, serializeParamPayload, programId, programKey } from './requestUtils';
+import { serializeParams, RestClientOptions, GenericAPIResponse, FtxDomain, serializeParamPayload, programId, programKey, programId2, isFtxUS } from './requestUtils';
 
 type ApiHeaders = 'key' | 'ts' | 'sign' | 'subaccount';
 
@@ -32,7 +32,7 @@ const getHeader = (headerId: ApiHeaders, domain: FtxDomain = 'ftxcom'): string =
     }
   }
 
-  console.warn('No matching header name: ', { headerId, domain  });
+  console.warn('Unknown header requested: ', { headerId, domain });
   return 'null';
 }
 
@@ -99,7 +99,7 @@ export default class RequestUtil {
   }
 
   post(endpoint: string, params?: any): GenericAPIResponse {
-    return this._call('POST', endpoint, { ...params, [programKey]: programId });
+    return this._call('POST', endpoint, { ...params, [programKey]: isFtxUS(this.options) ? programId : programId2 });
   }
 
   delete(endpoint: string, params?: any): GenericAPIResponse {

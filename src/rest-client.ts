@@ -1,11 +1,41 @@
 import { AxiosRequestConfig } from 'axios';
 import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
-
-type OrderSide = 'buy' | 'sell';
-type OrderType = 'market' | 'limit';
-type ConditionalOrderType = 'stop' | 'trailing_stop' | 'take_profit';
-type ConditionalOrderTypeNoUnderscore = 'stop' | 'trailingStop' | 'takeProfit';
+import {
+  APIResponse,
+  CancelAllOrdersReq,
+  CancelNftAuctionReq,
+  ChangeSubNameReq,
+  DepositAddressReq,
+  EditNftGallerySettingsReq,
+  FillsReq,
+  FundingPaymentsReq,
+  FuturesCoin,
+  HistoricalIndexReq,
+  HistoricalPricesReq,
+  ModifyClientIdOrderReq,
+  ModifyOrderReq,
+  ModifyTriggerOrderReq,
+  NewLendingOfferReq,
+  NewOrderReq,
+  NewQuoteReq,
+  NewSavedAddressReq,
+  NewTriggerOrderReq,
+  NftAuctionEditReq,
+  NftAuctionReq,
+  NftBidReq,
+  OpenTriggerOrdersReq,
+  OrderbookReq,
+  OrderHistoryReq,
+  QuoteReq,
+  RedeemNftReq,
+  TimeRange,
+  TimeRangeLimit,
+  TradesReq,
+  TransferBetweenSubReq,
+  TriggerOrderHistoryReq,
+  WithdrawalReq,
+} from './types/rest';
 
 export class RestClient {
   protected requestWrapper: RequestWrapper;
@@ -73,10 +103,7 @@ export class RestClient {
     return this.requestWrapper.post('subaccounts', { nickname });
   }
 
-  changeSubaccountName(params: {
-    nickname: string;
-    newNickname: string;
-  }): GenericAPIResponse {
+  changeSubaccountName(params: ChangeSubNameReq): GenericAPIResponse {
     return this.requestWrapper.post('subaccounts/update_name', params);
   }
 
@@ -88,12 +115,7 @@ export class RestClient {
     return this.requestWrapper.get(`subaccounts/${nickname}/balances`);
   }
 
-  transferBetweenSubaccounts(params: {
-    coin: string;
-    size: number;
-    source: string;
-    destination: string;
-  }): GenericAPIResponse {
+  transferBetweenSubaccounts(params: TransferBetweenSubReq): GenericAPIResponse {
     return this.requestWrapper.post('subaccounts/transfer', params);
   }
 
@@ -112,30 +134,16 @@ export class RestClient {
     return this.requestWrapper.get(`markets/${marketName}`);
   }
 
-  getOrderbook(params: {
-    marketName: string;
-    depth?: number;
-  }): GenericAPIResponse {
+  getOrderbook(params: OrderbookReq): GenericAPIResponse {
     const suffix = params.depth ? `?depth=${params.depth}` : '';
     return this.requestWrapper.get(`markets/${params.marketName}/orderbook${suffix}`);
   }
 
-  getTrades(params: {
-    market_name: string;
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
+  getTrades(params: TradesReq): GenericAPIResponse {
     return this.requestWrapper.get(`markets/${params.market_name}/trades`, params);
   }
 
-  getHistoricalPrices(params: {
-    market_name: string;
-    resolution: number;
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
+  getHistoricalPrices(params: HistoricalPricesReq): GenericAPIResponse {
     return this.requestWrapper.get(`markets/${params.market_name}/candles`, params);
   }
 
@@ -146,7 +154,7 @@ export class RestClient {
    *
   **/
 
-  listAllFutures(): GenericAPIResponse {
+  listAllFutures(): Promise<APIResponse<FuturesCoin[]>> {
     return this.requestWrapper.get('futures');
   }
 
@@ -170,13 +178,7 @@ export class RestClient {
     return this.requestWrapper.get('expired_futures');
   }
 
-  getHistoricalIndex(params: {
-    marketName: string;
-    resolution: number;
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
+  getHistoricalIndex(params: HistoricalIndexReq): GenericAPIResponse {
     return this.requestWrapper.get(`indexes/${params.marketName}/candles`, params);
   }
 
@@ -219,46 +221,24 @@ export class RestClient {
     return this.requestWrapper.get('wallet/all_balances');
   }
 
-  getDepositAddress(params: {
-    coin: string;
-    method?: string;
-  }): GenericAPIResponse {
+  getDepositAddress(params: DepositAddressReq): GenericAPIResponse {
     const suffix = params.method ? `?method=${params.method}` : '';
     return this.requestWrapper.get(`wallet/deposit_address/${params.coin}${suffix}`);
   }
 
-  getDepositHistory(params?: {
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
+  getDepositHistory(params?: TimeRangeLimit): GenericAPIResponse {
     return this.requestWrapper.get('wallet/deposits', params);
   }
 
-  getWithdrawalHistory(params?: {
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
+  getWithdrawalHistory(params?: TimeRangeLimit): GenericAPIResponse {
     return this.requestWrapper.get('wallet/withdrawals', params);
   }
 
-  requestWithdrawal(params: {
-    coin: string;
-    size: number;
-    address: string;
-    tag?: string;
-    password?: string;
-    code?: string;
-  }): GenericAPIResponse {
+  requestWithdrawal(params: WithdrawalReq): GenericAPIResponse {
     return this.requestWrapper.post('wallet/withdrawals', params);
   }
 
-  getAirdrops(params?: {
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
+  getAirdrops(params?: TimeRangeLimit): GenericAPIResponse {
     return this.requestWrapper.get('wallet/airdrops', params);
   }
 
@@ -266,13 +246,7 @@ export class RestClient {
     return this.requestWrapper.get('wallet/saved_addresses', { coin });
   }
 
-  createSavedAddress(params: {
-    coin: string;
-    address: string;
-    addressName: string;
-    isPrimeTrust: boolean;
-    tag?: string;
-  }): GenericAPIResponse {
+  createSavedAddress(params: NewSavedAddressReq): GenericAPIResponse {
     return this.requestWrapper.post('wallet/saved_addresses', params);
   }
 
@@ -292,19 +266,11 @@ export class RestClient {
     return this.requestWrapper.get(`orders${suffix}`);
   }
 
-  getOrderHistory(params?: {
-    market?: string;
-    start_time?: number;
-    end_time?: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getOrderHistory(params?: OrderHistoryReq): GenericAPIResponse {
     return this.requestWrapper.get(`orders/history`, params);
   }
 
-  getOpenTriggerOrders(params?: {
-    market?: string;
-    type?: ConditionalOrderType;
-  }): GenericAPIResponse {
+  getOpenTriggerOrders(params?: OpenTriggerOrdersReq): GenericAPIResponse {
     return this.requestWrapper.get(`conditional_orders`, params);
   }
 
@@ -312,55 +278,19 @@ export class RestClient {
     return this.requestWrapper.get(`conditional_orders/${conditionalOrderId}/triggers`);
   }
 
-  getTriggerOrderHistory(params?: {
-    market?: string;
-    start_time?: number;
-    end_time?: number;
-    side?: OrderSide;
-    type?: ConditionalOrderType;
-    orderType?: OrderType;
-  }): GenericAPIResponse {
+  getTriggerOrderHistory(params?: TriggerOrderHistoryReq): GenericAPIResponse {
     return this.requestWrapper.get(`conditional_orders/history`, params);
   }
 
-  placeOrder(params: {
-    market: string;
-    side: OrderSide;
-    price: number | null;
-    type: OrderType;
-    size: number;
-    reduceOnly?: boolean;
-    ioc?: boolean;
-    postOnly?: boolean;
-    clientId?: string;
-  }): GenericAPIResponse {
+  placeOrder(params: NewOrderReq): GenericAPIResponse {
     return this.requestWrapper.post('orders', params);
   }
 
-  placeTriggerOrder(params: {
-    market: string;
-    side: OrderSide;
-    size: number;
-    type: ConditionalOrderTypeNoUnderscore;
-    reduceOnly?: boolean;
-    retryUntilFilled?: boolean;
-
-    // stop loss & take profit only
-    triggerPrice?: number;
-    orderPrice?: number;
-
-    // tailing stop only
-    trailValue?: number;
-  }): GenericAPIResponse {
+  placeTriggerOrder(params: NewTriggerOrderReq): GenericAPIResponse {
     return this.requestWrapper.post('conditional_orders', params);
   }
 
-  modifyOrder(params: {
-    orderId: string;
-    price?: number;
-    size?: number;
-    clientId?: string;
-  }): GenericAPIResponse {
+  modifyOrder(params: ModifyOrderReq): GenericAPIResponse {
     return this.requestWrapper.post(`orders/${params.orderId}/modify`, {
       size: params.size,
       price: params.price,
@@ -368,20 +298,11 @@ export class RestClient {
     });
   }
 
-  modifyOrderByClientId(clientOrderId: string, params: {
-    price?: number;
-    size?: number;
-    clientId?: string;
-  }): GenericAPIResponse {
+  modifyOrderByClientId(clientOrderId: string, params: ModifyClientIdOrderReq): GenericAPIResponse {
     return this.requestWrapper.post(`orders/by_client_id/${clientOrderId}/modify`, params);
   }
 
-  modifyTriggerOrder(orderId: string, params: {
-    size?: number;
-    triggerPrice?: number;
-    orderPrice?: number;
-    trailValue?: number;
-  }): GenericAPIResponse {
+  modifyTriggerOrder(orderId: string, params: ModifyTriggerOrderReq): GenericAPIResponse {
     return this.requestWrapper.post(`conditional_orders/${orderId}/modify`, params);
   }
 
@@ -405,11 +326,7 @@ export class RestClient {
     return this.requestWrapper.delete(`conditional_orders/${conditionalOrderId}`);
   }
 
-  cancelAllOrders(params?: {
-    market?: string;
-    conditionalOrdersOnly?: boolean;
-    limitOrdersOnly?: boolean;
-  }): GenericAPIResponse {
+  cancelAllOrders(params?: CancelAllOrdersReq): GenericAPIResponse {
     return this.requestWrapper.delete('orders', params);
   }
 
@@ -420,11 +337,7 @@ export class RestClient {
    *
   **/
 
-  requestQuote(params: {
-    fromCoin: string;
-    toCoin: string;
-    size: number;
-  }): GenericAPIResponse {
+  requestQuote(params: QuoteReq): GenericAPIResponse {
     return this.requestWrapper.post(`otc/quotes`, params);
   }
 
@@ -477,11 +390,7 @@ export class RestClient {
     return this.requestWrapper.get(`spot_margin/lending_info`);
   }
 
-  submitLendingOffer(params: {
-    coin: string;
-    size: number;
-    rate: number;
-  }): GenericAPIResponse {
+  submitLendingOffer(params: NewLendingOfferReq): GenericAPIResponse {
     return this.requestWrapper.post(`spot_margin/offers`, params);
   }
 
@@ -492,22 +401,11 @@ export class RestClient {
    *
   **/
 
-  getFills(params: {
-    market?: string;
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-    order?: 'asc';
-    orderId?: number;
-  }): GenericAPIResponse {
+  getFills(params: FillsReq): GenericAPIResponse {
     return this.requestWrapper.get(`fills`, params);
   }
 
-  getFundingPayments(params?: {
-    start_time?: number;
-    end_time?: number;
-    future?: string;
-  }): GenericAPIResponse {
+  getFundingPayments(params?: FundingPaymentsReq): GenericAPIResponse {
     return this.requestWrapper.get(`funding_payments`, params);
   }
 
@@ -561,18 +459,7 @@ export class RestClient {
     return this.requestWrapper.get(`options/my_requests`);
   }
 
-  createQuoteRequest(params: {
-    underlying: string;
-    type: 'call' | 'put';
-    strike: number;
-    expiry: number;
-    side: OrderSide;
-    size: number;
-    limitPrice?: number;
-    hideLimitPrice: boolean;
-    requestExpiry?: number;
-    counterpartyId?: number;
-  }): GenericAPIResponse {
+  createQuoteRequest(params: NewQuoteReq): GenericAPIResponse {
     return this.requestWrapper.post(`options/requests`, params);
   }
 
@@ -608,19 +495,11 @@ export class RestClient {
     return this.requestWrapper.get(`options/positions`);
   }
 
-  getPublicOptionsTrades(params?: {
-    start_time?: number;
-    end_time?: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getPublicOptionsTrades(params?: TimeRangeLimit): GenericAPIResponse {
     return this.requestWrapper.get(`options/trades`, params);
   }
 
-  getOptionsFills(params?: {
-    start_time?: number;
-    end_time?: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getOptionsFills(params?: TimeRangeLimit): GenericAPIResponse {
     return this.requestWrapper.get(`options/fills`, params);
   }
 
@@ -628,11 +507,7 @@ export class RestClient {
     return this.requestWrapper.get(`options/24h_options_volume`);
   }
 
-  getOptionsHistoricalVolumes(params?: {
-    start_time?: number;
-    end_time?: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getOptionsHistoricalVolumes(params?: TimeRangeLimit): GenericAPIResponse {
     return this.requestWrapper.get(`options/historical_volumes/BTC`, params);
   }
 
@@ -640,11 +515,7 @@ export class RestClient {
     return this.requestWrapper.get(`options/open_interest/BTC`);
   }
 
-  getOptionsHistoricalOpenInterest(params?: {
-    start_time?: number;
-    end_time?: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getOptionsHistoricalOpenInterest(params?: TimeRangeLimit): GenericAPIResponse {
     return this.requestWrapper.get(`options/historical_open_interest/BTC`, params);
   }
 
@@ -705,17 +576,11 @@ export class RestClient {
     return this.requestWrapper.get(`nft/${nftId}`);
   }
 
-  getNftTrades(nftId: number, params?: {
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
+  getNftTrades(nftId: number, params?: TimeRange): GenericAPIResponse {
     return this.requestWrapper.get(`nft/${nftId}/trades`, params);
   }
 
-  getAllNftTrades(params?: {
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
+  getAllNftTrades(params?: TimeRangeLimit): GenericAPIResponse {
     return this.requestWrapper.get('nft/all_trades', params);
   }
 
@@ -731,74 +596,43 @@ export class RestClient {
     return this.requestWrapper.get('nft/balances');
   }
 
-  makeNftOffer(params: {
-    nftId: number;
-    price: number;
-  }): GenericAPIResponse {
+  makeNftOffer(params: NftBidReq): GenericAPIResponse {
     return this.requestWrapper.post('nft/offer', params);
   }
 
-  buyNft(params: {
-    nftId: number;
-    price: number;
-  }): GenericAPIResponse {
+  buyNft(params: NftBidReq): GenericAPIResponse {
     return this.requestWrapper.post('nft/buy', params);
   }
 
-  createNftAuction(params: {
-    initialPrice: number;
-    reservationPrice: number;
-    duration: number
-  }): GenericAPIResponse {
+  createNftAuction(params: NftAuctionReq): GenericAPIResponse {
     return this.requestWrapper.post('nft/auction', params);
   }
 
-  editNftAuction(params: {
-    reservationPrice: number;
-  }): GenericAPIResponse {
+  editNftAuction(params: NftAuctionEditReq): GenericAPIResponse {
     return this.requestWrapper.post('nft/edit_auction', params);
   }
 
-  cancelNftAuction(params: {
-    nftId: number;
-    reservationPrice: number;
-  }): GenericAPIResponse {
+  cancelNftAuction(params: CancelNftAuctionReq): GenericAPIResponse {
     return this.requestWrapper.post('nft/cancel_auction', params);
   }
 
-  placeNftBid(params: {
-    nftId: number;
-    price: number;
-  }): GenericAPIResponse {
+  placeNftBid(params: NftBidReq): GenericAPIResponse {
     return this.requestWrapper.post('nft/bids', params);
   }
 
-  getNftDeposits(params: {
-    start_time: number;
-    end_time: number;
-  }): GenericAPIResponse {
+  getNftDeposits(params: Required<TimeRange>): GenericAPIResponse {
     return this.requestWrapper.get('nft/deposits', params);
   }
 
-  getNftWithdrawls(params: {
-    start_time: number;
-    end_time: number;
-  }): GenericAPIResponse {
+  getNftWithdrawls(params: Required<TimeRange>): GenericAPIResponse {
     return this.requestWrapper.get('nft/withdrawls', params);
   }
 
-  getNftFills(params: {
-    start_time: number;
-    end_time: number;
-  }): GenericAPIResponse {
+  getNftFills(params: Required<TimeRange>): GenericAPIResponse {
     return this.requestWrapper.get('nft/fills', params);
   }
 
-  redeemNft(params: {
-    nftId: number;
-    address: string;
-    notes: string;
-  }): GenericAPIResponse {
+  redeemNft(params: RedeemNftReq): GenericAPIResponse {
     return this.requestWrapper.post('nft/redeem', params);
   }
 
@@ -810,9 +644,7 @@ export class RestClient {
     return this.requestWrapper.get('nft/gallery_settings');
   }
 
-  editNftGallerySettings(params: {
-    public: boolean;
-  }): GenericAPIResponse {
+  editNftGallerySettings(params: EditNftGallerySettingsReq): GenericAPIResponse {
     return this.requestWrapper.post('nft/gallery_settings', params);
   }
 

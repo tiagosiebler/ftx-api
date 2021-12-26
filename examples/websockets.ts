@@ -1,3 +1,4 @@
+import { isWsTradesEvent } from "../src/util/typeGuards";
 import { WebsocketClient } from "../src/websocket-client";
 
 /*
@@ -17,7 +18,15 @@ try {
 
   // append event listeners
   ws.on('response', msg => console.log('response: ', msg));
-  ws.on('update', msg => console.log('update: ', msg));
+  ws.on('update', msg => {
+    // use a type guard to narrow down types
+    if (isWsTradesEvent(msg)) {
+      // msg now is WsEventTrades
+      console.log('trades event: ', msg);
+    } else {
+      console.log('update: ', msg);
+    }
+  });
   ws.on('error', msg => console.log('err: ', msg));
 
   // Subscribe to public & private topics. Any of the following are valid:

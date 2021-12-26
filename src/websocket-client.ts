@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { RestClient } from './rest-client';
 import { DefaultLogger } from './logger';
-import { WSClientConfigurableOptions, getWsUrl, WebsocketClientOptions } from './util/requestUtils';
+import { WSClientConfigurableOptions, getWsUrl, WebsocketClientOptions, parseRawWsMessage } from './util/requestUtils';
 
 import WebSocket from 'isomorphic-ws';
 import WsStore from './util/WsStore';
@@ -166,6 +166,7 @@ export class WebsocketClient extends EventEmitter {
     } catch (err) {
       this.parseWsError('Connection failed', err, wsKey);
       this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
+      this.emit('error', { error: err, wsKey, type: 'CONNECTION_FAILED' });
     }
   }
 
@@ -348,14 +349,21 @@ export class WebsocketClient extends EventEmitter {
     );
   }
 
-  private onWsMessage(event, wsKey: string) {
-    const msg = JSON.parse(event && event.data || event);
+  private onWsMessage(event: MessageEvent, wsKey: string) {
+    try {
+      const msg = parseRawWsMessage(event);
 
-    if (msg.channel) {
-      this.onWsMessageUpdate(msg);
-    } else {
-      this.logger.debug('Websocket event: ', event.data || event);
-      this.onWsMessageResponse(msg, wsKey);
+      this.clearPongTimer(wsKey);
+
+      if (msg.channel) {
+        this.emit('update', msg);
+      } else {
+        this.logger.debug('Websocket event: ', event.data || event);
+        this.onWsMessageResponse(msg, wsKey);
+      }
+    } catch (e) {
+      this.logger.error('Exception parsing ws message: ', { ...loggerCategory, rawEvent: event, wsKey, error: e });
+      this.emit('error', { wsKey, error: e, rawEvent: event });
     }
   }
 
