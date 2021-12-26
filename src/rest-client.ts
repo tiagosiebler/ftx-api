@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import {
+  APIResponse,
   CancelAllOrdersReq,
   CancelNftAuctionReq,
   ChangeSubNameReq,
@@ -9,6 +10,7 @@ import {
   EditNftGallerySettingsReq,
   FillsReq,
   FundingPaymentsReq,
+  FuturesCoin,
   HistoricalIndexReq,
   HistoricalPricesReq,
   ModifyClientIdOrderReq,
@@ -152,7 +154,7 @@ export class RestClient {
    *
   **/
 
-  listAllFutures(): GenericAPIResponse {
+  listAllFutures(): Promise<APIResponse<FuturesCoin[]>> {
     return this.requestWrapper.get('futures');
   }
 
