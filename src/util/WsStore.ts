@@ -1,7 +1,8 @@
-import { WsChannel, WsConnectionState, WsTopic } from '../websocket-client';
-import { DefaultLogger } from '../logger';
-
 import WebSocket from 'isomorphic-ws';
+
+import { WsConnectionState } from '../websocket-client';
+import { DefaultLogger } from '../logger';
+import { WsChannel, WsTopic } from '../types/websockets';
 
 type WsTopicList = Set<WsTopic>;
 type KeyedWsTopicLists = {

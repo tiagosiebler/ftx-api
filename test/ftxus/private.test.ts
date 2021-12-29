@@ -71,7 +71,7 @@ describe('FTX.us private endpoints', () => {
         market,
         type,
         side: 'sell',
-        size: Number(balanceBtc.free),
+        size: Number(balanceBtc!.free),
         price: null
       });
       expect(result).toMatchObject({

@@ -262,3 +262,44 @@ export interface FuturesCoin {
   "openInterest": number;
   "openInterestUsd": number;
 }
+
+export interface FuturesPosition {
+  "future": string;
+  "size": number;
+  "side": OrderSide;
+  "netSize": number;
+  "longOrderSize": number;
+  "shortOrderSize": number;
+  "cost": number;
+  "entryPrice": null | number;
+  "unrealizedPnl": number;
+  "realizedPnl": number;
+  "initialMarginRequirement": number;
+  "maintenanceMarginRequirement": number;
+  "openSize": number;
+  "collateralUsed": number;
+  "estimatedLiquidationPrice": null | number;
+  "recentAverageOpenPrice": null | number;
+  "recentPnl": null | number;
+  "recentBreakEvenPrice": null | number;
+  "cumulativeBuySize": null | number;
+  "cumulativeSellSize": null | number;
+}
+
+export interface ActiveFuturesPosition extends FuturesPosition {
+  estimatedLiquidationPrice: number;
+  recentAverageOpenPrice: number;
+  recentPnl: number;
+  recentBreakEvenPrice: number;
+  cumulativeBuySize: number;
+  cumulativeSellSize: number;
+}
+
+export interface Balance {
+  coin: string;
+  total: number;
+  free: number;
+  availableWithoutBorrow: number;
+  usdValue: number;
+  spotBorrow: number;
+}

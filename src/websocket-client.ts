@@ -7,6 +7,7 @@ import WebSocket from 'isomorphic-ws';
 import WsStore from './util/WsStore';
 import { getWsAuthMessage, isWsPong } from './util/wsMessages';
 import { signMessage, signWsAuthenticate } from './util/node-support';
+import { WsChannel, WsEvent, WsTopic } from './types/websockets';
 
 const loggerCategory = { category: 'ftx-ws' };
 
@@ -28,15 +29,9 @@ export const wsKeyGeneral = 'ftx';
 
 export declare interface WebsocketClient {
   on(event: 'open' | 'reconnected', listener: ({ wsKey: string, event: any }) => void): this;
-  on(event: 'response' | 'update' | 'error', listener: (response: any) => void): this;
+  on(event: 'response' | 'error', listener: (response: any) => void): this;
+  on(event: 'update', listener: (response: WsEvent | any) => void): this;
   on(event: 'reconnect' | 'close', listener: () => void): this;
-};
-
-export type WsChannel = 'orderbook' | 'orderbookGrouped' | 'markets' | 'trades' | 'ticker' | 'fills' | 'orders' | string;
-export interface WsTopic {
-  channel: WsChannel;
-  grouping?: number;
-  market?: string;
 };
 
 export class WebsocketClient extends EventEmitter {
@@ -351,10 +346,9 @@ export class WebsocketClient extends EventEmitter {
 
   private onWsMessage(event: MessageEvent, wsKey: string) {
     try {
-      const msg = parseRawWsMessage(event);
-
       this.clearPongTimer(wsKey);
 
+      const msg = parseRawWsMessage(event);
       if (msg.channel) {
         this.emit('update', msg);
       } else {
@@ -393,10 +387,6 @@ export class WebsocketClient extends EventEmitter {
     } else {
       this.emit('response', response);
     }
-  }
-
-  private onWsMessageUpdate(message: any) {
-    this.emit('update', message);
   }
 
   private getWs(wsKey: string) {
