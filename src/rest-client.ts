@@ -3,6 +3,7 @@ import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/re
 import RequestWrapper from './util/requestWrapper';
 import {
   APIResponse,
+  Balance,
   CancelAllOrdersReq,
   CancelNftAuctionReq,
   ChangeSubNameReq,
@@ -11,6 +12,7 @@ import {
   FillsReq,
   FundingPaymentsReq,
   FuturesCoin,
+  FuturesPosition,
   HistoricalIndexReq,
   HistoricalPricesReq,
   ModifyClientIdOrderReq,
@@ -193,7 +195,7 @@ export class RestClient {
     return this.requestWrapper.get('account');
   }
 
-  getPositions(showAveragePrice?: boolean): GenericAPIResponse {
+  getPositions(showAveragePrice?: boolean): Promise<APIResponse<FuturesPosition[]>> {
     const suffix = showAveragePrice !== undefined ? `?showAvgPrice=${showAveragePrice}` : '';
     return this.requestWrapper.get(`positions${suffix}`);
   }
@@ -213,7 +215,7 @@ export class RestClient {
     return this.requestWrapper.get('wallet/coins');
   }
 
-  getBalances(): GenericAPIResponse {
+  getBalances(): Promise<APIResponse<Balance[]>> {
     return this.requestWrapper.get('wallet/balances');
   }
 
