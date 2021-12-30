@@ -1,4 +1,4 @@
-
+import { OrderSide } from "./rest";
 
 export type WsChannel = 'orderbook' | 'orderbookGrouped' | 'markets' | 'trades' | 'ticker' | 'fills' | 'orders' | string;
 export interface WsTopic {
@@ -7,7 +7,8 @@ export interface WsTopic {
   market?: string;
 };
 
-export type WsEvent = WsEventSubscribed | WsEventTrades;
+export type WsEvent = WsEventSubscribed | WsEventTrades | WsFill;
+export type WsEventType = 'subscribed' | 'update';
 
 export interface WsEventSubscribed {
   type: 'subscribed';
@@ -19,14 +20,39 @@ export interface WsTrade {
   id: number;
   price: number;
   size: number;
-  side: 'sell' | 'buy';
+  side: OrderSide;
   liquidation: boolean;
   time: string;
 }
 
 export interface WsEventTrades {
+  type: 'update';
   channel: 'trades';
   market: string;
-  type: 'update';
   data: WsTrade[];
+}
+
+export interface WsFill {
+  type: 'update';
+  channel: 'fills';
+  data: {
+    id: number;
+    market: string;
+    future: string;
+    // spot markets only
+    baseCurrency: null | string;
+    // spot markets only
+    quoteCurrency: null | string;
+    type: 'order' | string;
+    side: OrderSide;
+    price: number;
+    size: number;
+    orderId: number;
+    time: string;
+    tradeId: number;
+    feeRate: number;
+    fee: number;
+    feeCurrency: string;
+    liquidity: 'taker' | 'maker'
+  }
 }
