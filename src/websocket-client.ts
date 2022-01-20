@@ -47,7 +47,7 @@ export class WebsocketClient extends EventEmitter {
     this.wsStore = new WsStore(this.logger);
 
     this.options = {
-      pongTimeout: 1000,
+      pongTimeout: 7500,
       pingInterval: 10000,
       reconnectTimeout: 500,
       ...options
