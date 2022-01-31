@@ -183,18 +183,19 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private parseWsError(context: string, error, wsKey: string) {
+    const logContext = { ...loggerCategory, wsKey, error };
     if (!error.message) {
-      this.logger.error(`${context} due to unexpected error: `, error);
+      this.logger.error(`${context} due to unexpected error: `, logContext);
       return;
     }
 
     switch (error.message) {
       case 'Unexpected server response: 401':
-        this.logger.error(`${context} due to 401 authorization failure.`, { ...loggerCategory, wsKey });
+        this.logger.error(`${context} due to 401 authorization failure.`, logContext);
         break;
 
       default:
-        this.logger.error(`{context} due to unexpected response error: ${error.msg}`, { ...loggerCategory, wsKey });
+        this.logger.error(`${context} due to unexpected response error: ${error?.msg || error?.message || error}`, logContext);
         break;
     }
   }
