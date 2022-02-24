@@ -191,7 +191,12 @@ export default class RequestUtil {
       };
     }
 
-    const signature_payload = `${timestamp}${method}/api/${endpoint}${serialisedParams}`;
+    let signature_payload;
+    if (serialisedParams==='?') {
+      signature_payload = `${timestamp}${method}/api/${endpoint}`;
+    } else {
+      signature_payload = `${timestamp}${method}/api/${endpoint}${serialisedParams}`;
+    }
 
     return {
       timestamp,
