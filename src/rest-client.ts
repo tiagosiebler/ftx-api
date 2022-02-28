@@ -3,7 +3,7 @@ import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/re
 import RequestWrapper from './util/requestWrapper';
 import {
   APIResponse,
-  Balance,
+  Balance, BorrowHistoryParams,
   CancelAllOrdersReq,
   CancelNftAuctionReq,
   ChangeSubNameReq,
@@ -376,8 +376,8 @@ export class RestClient {
     return this.requestWrapper.get(`spot_margin/market_info${suffix}`);
   }
 
-  getBorrowHistory(): GenericAPIResponse {
-    return this.requestWrapper.get(`spot_margin/borrow_history`);
+  getBorrowHistory(params:BorrowHistoryParams): GenericAPIResponse {
+    return this.requestWrapper.get(`spot_margin/borrow_history`,params);
   }
 
   getLendingHistory(): GenericAPIResponse {

@@ -167,6 +167,10 @@ export interface NewLendingOfferReq {
   rate: number;
 }
 
+export interface BorrowHistoryParams{
+  start_time?: number;
+  end_time?: number;
+}
 export interface FillsReq {
   market?: string;
   limit?: number;
