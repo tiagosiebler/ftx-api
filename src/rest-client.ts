@@ -377,7 +377,7 @@ export class RestClient {
   }
 
   getBorrowHistory(params: TimeRange): GenericAPIResponse {
-    return this.requestWrapper.get(`spot_margin/borrow_history`,params);
+    return this.requestWrapper.get(`spot_margin/borrow_history`, params);
   }
 
   getLendingHistory(): GenericAPIResponse {
