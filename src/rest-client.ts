@@ -3,7 +3,7 @@ import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/re
 import RequestWrapper from './util/requestWrapper';
 import {
   APIResponse,
-  Balance, BorrowHistoryParams,
+  Balance,
   CancelAllOrdersReq,
   CancelNftAuctionReq,
   ChangeSubNameReq,
