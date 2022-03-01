@@ -376,7 +376,7 @@ export class RestClient {
     return this.requestWrapper.get(`spot_margin/market_info${suffix}`);
   }
 
-  getBorrowHistory(params:BorrowHistoryParams): GenericAPIResponse {
+  getBorrowHistory(params: TimeRange): GenericAPIResponse {
     return this.requestWrapper.get(`spot_margin/borrow_history`,params);
   }
 
