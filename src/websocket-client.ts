@@ -7,7 +7,7 @@ import WebSocket from 'isomorphic-ws';
 import WsStore from './util/WsStore';
 import { getWsAuthMessage, isWsPong } from './util/wsMessages';
 import { signMessage, signWsAuthenticate } from './util/node-support';
-import { WsChannel, WsEvent, WsTopic } from './types/websockets';
+import type { WsChannel, WsEvent, WsTopic } from './types/websockets';
 
 const loggerCategory = { category: 'ftx-ws' };
 
@@ -38,7 +38,7 @@ export class WebsocketClient extends EventEmitter {
   private logger: typeof DefaultLogger;
   private restClient: RestClient;
   private options: WebsocketClientOptions;
-  private wsStore: WsStore;
+  public wsStore: WsStore;
 
   constructor(options: WSClientConfigurableOptions, logger?: typeof DefaultLogger) {
     super();
@@ -123,7 +123,8 @@ export class WebsocketClient extends EventEmitter {
   public close(wsKey: string) {
     this.logger.info('Closing connection', { ...loggerCategory, wsKey });
     this.setWsState(wsKey, READY_STATE_CLOSING);
-    this.clearTimers(wsKey);
+    this.clearPingTimer(wsKey);
+    this.clearPongTimer(wsKey);
 
     this.getWs(wsKey)?.close();
   }
@@ -229,7 +230,9 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private reconnectWithDelay(wsKey: string, connectionDelayMs: number) {
-    this.clearTimers(wsKey);
+    this.clearPingTimer(wsKey);
+    this.clearPongTimer(wsKey);
+
     if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CONNECTING) {
       this.setWsState(wsKey, READY_STATE_RECONNECTING);
     }
@@ -247,14 +250,11 @@ export class WebsocketClient extends EventEmitter {
     this.tryWsSend(wsKey, JSON.stringify({ op: 'ping' }));
 
     this.wsStore.get(wsKey, true)!.activePongTimer = setTimeout(() => {
-      this.logger.info('Pong timeout - closing socket to reconnect', { ...loggerCategory, wsKey });
+      this.logger.info('Pong timeout - clearing timers & closing socket to reconnect', { ...loggerCategory, wsKey });
+      this.clearPingTimer(wsKey);
+      this.clearPongTimer(wsKey);
       this.getWs(wsKey)?.close();
     }, this.options.pongTimeout);
-  }
-
-  private clearTimers(wsKey: string) {
-    this.clearPingTimer(wsKey);
-    this.clearPongTimer(wsKey);
   }
 
   // Send a ping at intervals
