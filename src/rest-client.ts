@@ -1,5 +1,9 @@
 import { AxiosRequestConfig } from 'axios';
-import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
+import {
+  GenericAPIResponse,
+  getRestBaseUrl,
+  RestClientOptions,
+} from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import {
   APIResponse,
@@ -68,14 +72,16 @@ export class RestClient {
 
   /**
    * Misc possible undocumented endpoints - these may not always work
-  **/
+   **/
 
   getRebateHistory() {
     return this.requestWrapper.get('referral_rebate_history');
   }
 
   getAnnouncements(language: string = 'en') {
-    return this.requestWrapper.get('notifications/get_announcements?language=' + language);
+    return this.requestWrapper.get(
+      'notifications/get_announcements?language=' + language
+    );
   }
 
   requestDust(toCoin: string): GenericAPIResponse {
@@ -95,7 +101,7 @@ export class RestClient {
    * Subaccount Endpoints
    * https://docs.ftx.com/#subaccounts
    *
-  **/
+   **/
 
   getSubaccounts(): GenericAPIResponse {
     return this.requestWrapper.get('subaccounts');
@@ -117,7 +123,9 @@ export class RestClient {
     return this.requestWrapper.get(`subaccounts/${nickname}/balances`);
   }
 
-  transferBetweenSubaccounts(params: TransferBetweenSubReq): GenericAPIResponse {
+  transferBetweenSubaccounts(
+    params: TransferBetweenSubReq
+  ): GenericAPIResponse {
     return this.requestWrapper.post('subaccounts/transfer', params);
   }
 
@@ -126,7 +134,7 @@ export class RestClient {
    * Market Endpoints
    * https://docs.ftx.com/#markets
    *
-  **/
+   **/
 
   getMarkets(): GenericAPIResponse {
     return this.requestWrapper.get('markets');
@@ -138,15 +146,23 @@ export class RestClient {
 
   getOrderbook(params: OrderbookReq): GenericAPIResponse {
     const suffix = params.depth ? `?depth=${params.depth}` : '';
-    return this.requestWrapper.get(`markets/${params.marketName}/orderbook${suffix}`);
+    return this.requestWrapper.get(
+      `markets/${params.marketName}/orderbook${suffix}`
+    );
   }
 
   getTrades(params: TradesReq): GenericAPIResponse {
-    return this.requestWrapper.get(`markets/${params.market_name}/trades`, params);
+    return this.requestWrapper.get(
+      `markets/${params.market_name}/trades`,
+      params
+    );
   }
 
   getHistoricalPrices(params: HistoricalPricesReq): GenericAPIResponse {
-    return this.requestWrapper.get(`markets/${params.market_name}/candles`, params);
+    return this.requestWrapper.get(
+      `markets/${params.market_name}/candles`,
+      params
+    );
   }
 
   /**
@@ -154,7 +170,7 @@ export class RestClient {
    * Futures Endpoints
    * https://docs.ftx.com/#futures
    *
-  **/
+   **/
 
   listAllFutures(): Promise<APIResponse<FuturesCoin[]>> {
     return this.requestWrapper.get('futures');
@@ -181,7 +197,10 @@ export class RestClient {
   }
 
   getHistoricalIndex(params: HistoricalIndexReq): GenericAPIResponse {
-    return this.requestWrapper.get(`indexes/${params.marketName}/candles`, params);
+    return this.requestWrapper.get(
+      `indexes/${params.marketName}/candles`,
+      params
+    );
   }
 
   /**
@@ -189,14 +208,17 @@ export class RestClient {
    * Account Endpoints
    * https://docs.ftx.com/#account
    *
-  **/
+   **/
 
   getAccount(): GenericAPIResponse {
     return this.requestWrapper.get('account');
   }
 
-  getPositions(showAveragePrice?: boolean): Promise<APIResponse<FuturesPosition[]>> {
-    const suffix = showAveragePrice !== undefined ? `?showAvgPrice=${showAveragePrice}` : '';
+  getPositions(
+    showAveragePrice?: boolean
+  ): Promise<APIResponse<FuturesPosition[]>> {
+    const suffix =
+      showAveragePrice !== undefined ? `?showAvgPrice=${showAveragePrice}` : '';
     return this.requestWrapper.get(`positions${suffix}`);
   }
 
@@ -209,7 +231,7 @@ export class RestClient {
    * Wallet Endpoints
    * https://docs.ftx.com/#wallet
    *
-  **/
+   **/
 
   getCoins(): GenericAPIResponse {
     return this.requestWrapper.get('wallet/coins');
@@ -225,7 +247,9 @@ export class RestClient {
 
   getDepositAddress(params: DepositAddressReq): GenericAPIResponse {
     const suffix = params.method ? `?method=${params.method}` : '';
-    return this.requestWrapper.get(`wallet/deposit_address/${params.coin}${suffix}`);
+    return this.requestWrapper.get(
+      `wallet/deposit_address/${params.coin}${suffix}`
+    );
   }
 
   getDepositHistory(params?: TimeRangeLimit): GenericAPIResponse {
@@ -253,7 +277,9 @@ export class RestClient {
   }
 
   deleteSavedAddress(savedAddressId: number): GenericAPIResponse {
-    return this.requestWrapper.delete(`wallet/saved_addresses/${savedAddressId}`);
+    return this.requestWrapper.delete(
+      `wallet/saved_addresses/${savedAddressId}`
+    );
   }
 
   /**
@@ -261,7 +287,7 @@ export class RestClient {
    * Order Endpoints
    * https://docs.ftx.com/#wallet
    *
-  **/
+   **/
 
   getOpenOrders(market?: string): GenericAPIResponse {
     const suffix = market ? `?market=${market}` : '';
@@ -277,7 +303,9 @@ export class RestClient {
   }
 
   getTriggerOrderTriggers(conditionalOrderId: string): GenericAPIResponse {
-    return this.requestWrapper.get(`conditional_orders/${conditionalOrderId}/triggers`);
+    return this.requestWrapper.get(
+      `conditional_orders/${conditionalOrderId}/triggers`
+    );
   }
 
   getTriggerOrderHistory(params?: TriggerOrderHistoryReq): GenericAPIResponse {
@@ -296,16 +324,28 @@ export class RestClient {
     return this.requestWrapper.post(`orders/${params.orderId}/modify`, {
       size: params.size,
       price: params.price,
-      clientId: params.clientId
+      clientId: params.clientId,
     });
   }
 
-  modifyOrderByClientId(clientOrderId: string, params: ModifyClientIdOrderReq): GenericAPIResponse {
-    return this.requestWrapper.post(`orders/by_client_id/${clientOrderId}/modify`, params);
+  modifyOrderByClientId(
+    clientOrderId: string,
+    params: ModifyClientIdOrderReq
+  ): GenericAPIResponse {
+    return this.requestWrapper.post(
+      `orders/by_client_id/${clientOrderId}/modify`,
+      params
+    );
   }
 
-  modifyTriggerOrder(orderId: string, params: ModifyTriggerOrderReq): GenericAPIResponse {
-    return this.requestWrapper.post(`conditional_orders/${orderId}/modify`, params);
+  modifyTriggerOrder(
+    orderId: string,
+    params: ModifyTriggerOrderReq
+  ): GenericAPIResponse {
+    return this.requestWrapper.post(
+      `conditional_orders/${orderId}/modify`,
+      params
+    );
   }
 
   getOrderStatus(orderId: string): GenericAPIResponse {
@@ -325,7 +365,9 @@ export class RestClient {
   }
 
   cancelOpenTriggerOrder(conditionalOrderId: string): GenericAPIResponse {
-    return this.requestWrapper.delete(`conditional_orders/${conditionalOrderId}`);
+    return this.requestWrapper.delete(
+      `conditional_orders/${conditionalOrderId}`
+    );
   }
 
   cancelAllOrders(params?: CancelAllOrdersReq): GenericAPIResponse {
@@ -337,7 +379,7 @@ export class RestClient {
    * Convert Endpoints
    * https://docs.ftx.com/#convert
    *
-  **/
+   **/
 
   requestQuote(params: QuoteReq): GenericAPIResponse {
     return this.requestWrapper.post(`otc/quotes`, params);
@@ -357,7 +399,7 @@ export class RestClient {
    * Spot Margin Endpoints
    * https://docs.ftx.com/#spot-margin
    *
-  **/
+   **/
 
   getBorrowRates(): GenericAPIResponse {
     return this.requestWrapper.get(`spot_margin/borrow_rates`);
@@ -376,7 +418,7 @@ export class RestClient {
     return this.requestWrapper.get(`spot_margin/market_info${suffix}`);
   }
 
-  getBorrowHistory(params: TimeRange): GenericAPIResponse {
+  getBorrowHistory(params?: Partial<TimeRange>): GenericAPIResponse {
     return this.requestWrapper.get(`spot_margin/borrow_history`, params);
   }
 
@@ -401,7 +443,7 @@ export class RestClient {
    * Misc Endpoints (fills, & funding)
    * https://docs.ftx.com/#fills
    *
-  **/
+   **/
 
   getFills(params: FillsReq): GenericAPIResponse {
     return this.requestWrapper.get(`fills`, params);
@@ -416,7 +458,7 @@ export class RestClient {
    * Leveraged Tokens Endpoints
    * https://docs.ftx.com/#leveraged-tokens
    *
-  **/
+   **/
 
   listLeveragedTokens(): GenericAPIResponse {
     return this.requestWrapper.get(`lt/tokens`);
@@ -434,7 +476,10 @@ export class RestClient {
     return this.requestWrapper.get(`lt/creations`);
   }
 
-  requestLeveragedTokenCreation(tokenName: string, size: number): GenericAPIResponse {
+  requestLeveragedTokenCreation(
+    tokenName: string,
+    size: number
+  ): GenericAPIResponse {
     return this.requestWrapper.post(`lt/${tokenName}`, { size });
   }
 
@@ -442,7 +487,10 @@ export class RestClient {
     return this.requestWrapper.get(`lt/redemptions`);
   }
 
-  requestLeveragedTokenRedemption(tokenName: string, size: number): GenericAPIResponse {
+  requestLeveragedTokenRedemption(
+    tokenName: string,
+    size: number
+  ): GenericAPIResponse {
     return this.requestWrapper.post(`lt/${tokenName}/redeem`, { size });
   }
 
@@ -451,7 +499,7 @@ export class RestClient {
    * Options Endpoints
    * https://docs.ftx.com/#options
    *
-  **/
+   **/
 
   listQuoteRequests(): GenericAPIResponse {
     return this.requestWrapper.get(`options/requests`);
@@ -474,7 +522,9 @@ export class RestClient {
   }
 
   createQuote(quoteRequestId: string, price: number): GenericAPIResponse {
-    return this.requestWrapper.post(`options/requests/${quoteRequestId}`, { price });
+    return this.requestWrapper.post(`options/requests/${quoteRequestId}`, {
+      price,
+    });
   }
 
   getMyQuotes(): GenericAPIResponse {
@@ -517,8 +567,13 @@ export class RestClient {
     return this.requestWrapper.get(`options/open_interest/BTC`);
   }
 
-  getOptionsHistoricalOpenInterest(params?: TimeRangeLimit): GenericAPIResponse {
-    return this.requestWrapper.get(`options/historical_open_interest/BTC`, params);
+  getOptionsHistoricalOpenInterest(
+    params?: TimeRangeLimit
+  ): GenericAPIResponse {
+    return this.requestWrapper.get(
+      `options/historical_open_interest/BTC`,
+      params
+    );
   }
 
   /**
@@ -526,7 +581,7 @@ export class RestClient {
    * SRM Staking Endpoints
    * https://docs.ftx.com/#srm-staking
    *
-  **/
+   **/
 
   getStakes(): GenericAPIResponse {
     return this.requestWrapper.get(`staking/stakes`);
@@ -545,7 +600,9 @@ export class RestClient {
   }
 
   cancelUnstakeRequest(unstakeRequestId: string): GenericAPIResponse {
-    return this.requestWrapper.delete(`staking/unstake_requests/${unstakeRequestId}`);
+    return this.requestWrapper.delete(
+      `staking/unstake_requests/${unstakeRequestId}`
+    );
   }
 
   getStakingRewards(): GenericAPIResponse {
@@ -565,11 +622,11 @@ export class RestClient {
   }
 
   /**
-*
-* NFT Endpoints
-* https://docs.ftx.com/#nfts
-*
-**/
+   *
+   * NFT Endpoints
+   * https://docs.ftx.com/#nfts
+   *
+   **/
   listNfts(): GenericAPIResponse {
     return this.requestWrapper.get('nft');
   }
@@ -646,7 +703,9 @@ export class RestClient {
     return this.requestWrapper.get('nft/gallery_settings');
   }
 
-  editNftGallerySettings(params: EditNftGallerySettingsReq): GenericAPIResponse {
+  editNftGallerySettings(
+    params: EditNftGallerySettingsReq
+  ): GenericAPIResponse {
     return this.requestWrapper.post('nft/gallery_settings', params);
   }
 
@@ -660,9 +719,9 @@ export class RestClient {
       const result = new Date(response.result).getTime();
       const end = Date.now();
 
-      return Math.ceil(result - end + ((end - start) / 2));
+      return Math.ceil(result - end + (end - start) / 2);
     } catch (e) {
       return 0;
     }
   }
-};
+}
