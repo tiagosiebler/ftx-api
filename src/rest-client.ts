@@ -6,6 +6,7 @@ import {
 } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import {
+  AccountSummary,
   APIResponse,
   Balance,
   CancelAllOrdersReq,
@@ -210,7 +211,7 @@ export class RestClient {
    *
    **/
 
-  getAccount(): GenericAPIResponse {
+  getAccount(): Promise<APIResponse<AccountSummary>> {
     return this.requestWrapper.get('account');
   }
 
