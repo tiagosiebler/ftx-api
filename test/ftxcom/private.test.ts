@@ -1,5 +1,5 @@
-import { RestClient } from "../../src/rest-client";
-import { successResponseList } from "../response.util";
+import { RestClient } from '../../src/rest-client';
+import { successResponseList } from '../response.util';
 
 describe('FTX.com private endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
@@ -12,13 +12,17 @@ describe('FTX.com private endpoints', () => {
 
   it.skip('should get subaccounts', async () => {
     expect(await api.getSubaccounts()).toMatchObject({
-      "result": [
+      result: [
         {
-          "nickname": "comacc1",
-        }
+          nickname: 'comacc1',
+        },
       ],
-      "success": true
+      success: true,
     });
+  });
+
+  it('should getAccount()', async () => {
+    expect(await api.getAccount()).toMatchObject({});
   });
 
   it('should get balances', async () => {
@@ -37,23 +41,23 @@ describe('FTX.com private endpoints', () => {
         type,
         side: 'buy',
         size: buyAmount,
-        price: null
+        price: null,
       });
       expect(result).toMatchObject({
-        "result": {
-          "filledSize": expect.any(Number),
-          "id": expect.any(Number),
-          "market": market,
-          "postOnly": false,
-          "price": null,
-          "reduceOnly": false,
-          "remainingSize": expect.any(Number),
-          "side": "buy",
-          "size": buyAmount,
-          "status": expect.any(String),
-          "type": type
+        result: {
+          filledSize: expect.any(Number),
+          id: expect.any(Number),
+          market: market,
+          postOnly: false,
+          price: null,
+          reduceOnly: false,
+          remainingSize: expect.any(Number),
+          side: 'buy',
+          size: buyAmount,
+          status: expect.any(String),
+          type: type,
         },
-        "success": true
+        success: true,
       });
     } catch (e) {
       console.error('buy exception: ', e);
@@ -61,10 +65,10 @@ describe('FTX.com private endpoints', () => {
     }
 
     // sleep to allow order ifll
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     const balances = await api.getBalances();
-    const balanceBtc = balances.result.find(bal => bal.coin === 'BTC');
+    const balanceBtc = balances.result.find((bal) => bal.coin === 'BTC');
 
     try {
       const result = await api.placeOrder({
@@ -72,28 +76,27 @@ describe('FTX.com private endpoints', () => {
         type,
         side: 'sell',
         size: Number(balanceBtc!.free),
-        price: null
+        price: null,
       });
       expect(result).toMatchObject({
-        "result": {
-          "filledSize": expect.any(Number),
-          "id": expect.any(Number),
-          "market": market,
-          "postOnly": false,
-          "price": null,
-          "reduceOnly": false,
-          "remainingSize": expect.any(Number),
-          "side": "sell",
-          "size": expect.any(Number),
-          "status": expect.any(String),
-          "type": type
+        result: {
+          filledSize: expect.any(Number),
+          id: expect.any(Number),
+          market: market,
+          postOnly: false,
+          price: null,
+          reduceOnly: false,
+          remainingSize: expect.any(Number),
+          side: 'sell',
+          size: expect.any(Number),
+          status: expect.any(String),
+          type: type,
         },
-        "success": true
+        success: true,
       });
     } catch (e) {
       console.error('sell exception: ', e);
       expect(e).toBeUndefined();
     }
-
   });
 });

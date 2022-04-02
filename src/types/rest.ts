@@ -1,8 +1,10 @@
-
 export type OrderSide = 'buy' | 'sell';
 export type OrderType = 'market' | 'limit';
 export type ConditionalOrderType = 'stop' | 'trailing_stop' | 'take_profit';
-export type ConditionalOrderTypeNoUnderscore = 'stop' | 'trailingStop' | 'takeProfit';
+export type ConditionalOrderTypeNoUnderscore =
+  | 'stop'
+  | 'trailingStop'
+  | 'takeProfit';
 
 export interface TimeRange {
   start_time?: number;
@@ -203,7 +205,7 @@ export interface NftBidReq {
 export interface NftAuctionReq {
   initialPrice: number;
   reservationPrice: number;
-  duration: number
+  duration: number;
 }
 
 export interface NftAuctionEditReq {
@@ -229,61 +231,61 @@ export type FuturesCoinType = 'perpetual' | 'future' | 'prediction' | 'move';
 export type FuturesCoinGroup = 'perpetual' | 'quarterly' | 'prediction';
 
 export interface FuturesCoin {
-  "name": string;
-  "underlying": string;
-  "description": string;
-  "type": FuturesCoinType;
-  "expiry": null | string;
-  "perpetual": boolean;
-  "expired": false;
-  "enabled": true;
-  "postOnly": false;
-  "priceIncrement": number;
-  "sizeIncrement": number;
-  "last": number;
-  "bid": number;
-  "ask": number;
-  "index": number;
-  "mark": number;
-  "imfFactor": number;
-  "lowerBound": number;
-  "upperBound": number;
-  "underlyingDescription": string;
-  "expiryDescription": string;
-  "moveStart": null;
-  "marginPrice": number;
-  "positionLimitWeight": number;
-  "group": FuturesCoinGroup;
-  "change1h": number;
-  "change24h": number;
-  "changeBod": number;
-  "volumeUsd24h": number;
-  "volume": number;
-  "openInterest": number;
-  "openInterestUsd": number;
+  name: string;
+  underlying: string;
+  description: string;
+  type: FuturesCoinType;
+  expiry: null | string;
+  perpetual: boolean;
+  expired: false;
+  enabled: true;
+  postOnly: false;
+  priceIncrement: number;
+  sizeIncrement: number;
+  last: number;
+  bid: number;
+  ask: number;
+  index: number;
+  mark: number;
+  imfFactor: number;
+  lowerBound: number;
+  upperBound: number;
+  underlyingDescription: string;
+  expiryDescription: string;
+  moveStart: null;
+  marginPrice: number;
+  positionLimitWeight: number;
+  group: FuturesCoinGroup;
+  change1h: number;
+  change24h: number;
+  changeBod: number;
+  volumeUsd24h: number;
+  volume: number;
+  openInterest: number;
+  openInterestUsd: number;
 }
 
 export interface FuturesPosition {
-  "future": string;
-  "size": number;
-  "side": OrderSide;
-  "netSize": number;
-  "longOrderSize": number;
-  "shortOrderSize": number;
-  "cost": number;
-  "entryPrice": null | number;
-  "unrealizedPnl": number;
-  "realizedPnl": number;
-  "initialMarginRequirement": number;
-  "maintenanceMarginRequirement": number;
-  "openSize": number;
-  "collateralUsed": number;
-  "estimatedLiquidationPrice": null | number;
-  "recentAverageOpenPrice": null | number;
-  "recentPnl": null | number;
-  "recentBreakEvenPrice": null | number;
-  "cumulativeBuySize": null | number;
-  "cumulativeSellSize": null | number;
+  future: string;
+  size: number;
+  side: OrderSide;
+  netSize: number;
+  longOrderSize: number;
+  shortOrderSize: number;
+  cost: number;
+  entryPrice: null | number;
+  unrealizedPnl: number;
+  realizedPnl: number;
+  initialMarginRequirement: number;
+  maintenanceMarginRequirement: number;
+  openSize: number;
+  collateralUsed: number;
+  estimatedLiquidationPrice: null | number;
+  recentAverageOpenPrice: null | number;
+  recentPnl: null | number;
+  recentBreakEvenPrice: null | number;
+  cumulativeBuySize: null | number;
+  cumulativeSellSize: null | number;
 }
 
 export interface ActiveFuturesPosition extends FuturesPosition {
@@ -302,4 +304,32 @@ export interface Balance {
   availableWithoutBorrow: number;
   usdValue: number;
   spotBorrow: number;
+}
+
+// TOOD: define fields marked as any
+export interface AccountSummary {
+  accountIdentifier: number;
+  username: string;
+  collateral: number;
+  freeCollateral: number;
+  totalAccountValue: number;
+  totalPositionSize: number;
+  initialMarginRequirement: number;
+  maintenanceMarginRequirement: number;
+  marginFraction: null | any;
+  openMarginFraction: null | any;
+  liquidating: boolean;
+  backstopProvider: boolean;
+  positions: any[];
+  takerFee: number;
+  makerFee: number;
+  leverage: number;
+  futuresLeverage: number;
+  positionLimit: null | any;
+  positionLimitUsed: null | any;
+  useFttCollateral: boolean;
+  chargeInterestOnNegativeUsd: boolean;
+  spotMarginEnabled: boolean;
+  spotLendingEnabled: boolean;
+  accountType: null | any;
 }
