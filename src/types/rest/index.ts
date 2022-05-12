@@ -1,3 +1,5 @@
+import { ConditionalOrderType, ConditionalOrderTypeNoUnderscore, OrderSide, OrderType } from "./orders";
+
 export * from "./api-key-info";
 export * from "./nft";
 export * from "./staking";

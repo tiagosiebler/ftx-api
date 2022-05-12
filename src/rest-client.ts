@@ -228,8 +228,8 @@ export class RestClient {
    *
    **/
 
-  listAllFutures(): Promise<GenericAPIResponse<Futures>> {
-    return this.requestWrapper.get('futures');
+  listAllFutures(): GenericAPIResponse<Futures> {
+    return this.requestWrapper.get<Futures>('futures');
   }
 
   getFuture(futureName: string): GenericAPIResponse<FutureCoin> {
@@ -266,13 +266,13 @@ export class RestClient {
    *
    **/
 
-  getAccount(): Promise<GenericAPIResponse<AccountSummary>> {
+  getAccount(): GenericAPIResponse<AccountSummary> {
     return this.requestWrapper.get('account');
   }
 
   getPositions(
     showAveragePrice?: boolean
-  ): Promise<GenericAPIResponse<ActiveFuturesPosition[]>> {
+  ): GenericAPIResponse<ActiveFuturesPosition[]> {
     const suffix =
       showAveragePrice !== undefined ? `?showAvgPrice=${showAveragePrice}` : '';
     return this.requestWrapper.get(`positions${suffix}`);
@@ -293,7 +293,7 @@ export class RestClient {
     return this.requestWrapper.get('wallet/coins');
   }
 
-  getBalances(): Promise<GenericAPIResponse<Balances>> {
+  getBalances(): GenericAPIResponse<Balances> {
     return this.requestWrapper.get('wallet/balances');
   }
 

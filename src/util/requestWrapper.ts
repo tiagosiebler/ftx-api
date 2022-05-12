@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
 import { signMessage } from './node-support';
-import { serializeParams, RestClientOptions, FtxDomain, serializeParamPayload, programId, programKey, programId2, isFtxUS, APIResponse } from './requestUtils';
+import { serializeParams, RestClientOptions, FtxDomain, serializeParamPayload, programId, programKey, programId2, isFtxUS, GenericAPIResponse } from './requestUtils';
 
 type ApiHeaders = 'key' | 'ts' | 'sign' | 'subaccount';
 
@@ -94,22 +94,22 @@ export default class RequestUtil {
     this.secret = secret;
   }
 
-  get<T>(endpoint: string, params?: any): APIResponse<T> {
+  get<T>(endpoint: string, params?: any): GenericAPIResponse<T> {
     return this._call('GET', endpoint, params);
   }
 
-  post<T>(endpoint: string, params?: any): APIResponse<T> {
+  post<T>(endpoint: string, params?: any): GenericAPIResponse<T> {
     return this._call('POST', endpoint, { ...params, [programKey]: isFtxUS(this.options) ? programId : programId2 });
   }
 
-  delete<T>(endpoint: string, params?: any): APIResponse<T> {
+  delete<T>(endpoint: string, params?: any): GenericAPIResponse<T> {
     return this._call('DELETE', endpoint, params);
   }
 
   /**
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
-  async _call<T>(method: Method, endpoint: string, params?: string | object): APIResponse<T> {
+  async _call<T>(method: Method, endpoint: string, params?: string | object): GenericAPIResponse<T> {
     const options = {
       ...this.globalRequestOptions,
       method: method,
