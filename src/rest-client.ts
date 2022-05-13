@@ -58,7 +58,6 @@ import {
   TransferBetweenSubReq,
   TriggerOrderHistoryReq,
   UnstakeRequests,
-  WithdrawalAddress,
   WithdrawalReq,
   AllNftTrades, 
   NftAccountInfo, 
@@ -98,7 +97,26 @@ import {
   LendingInfo,
   LendingHistory,
   Fills,
-  AcceptedAptionsQuote, CancelledQuote, CancelledQuoteRequest, MyQuoteRequest, Options24hVolume, OptionsAccountInfo, OptionsFill, OptionsHistoricalVolumes, OptionsOpenInterest, OptionsPosition, OptionsTrade, QuoteForMyQuoteRequest, QuoteRequest, FundingPayment, LeveragedToken, LeveragedTokenbalance, LeveragedTokenCreationRequest, LeveragedTokenCreation, LeveragedTokenRedemptionRequest, LeveragedTokenRedemption
+  AcceptedOptionsQuote, 
+  CancelledQuote, 
+  CancelledQuoteRequest, 
+  MyQuoteRequest, 
+  Options24hVolume, 
+  OptionsAccountInfo, 
+  OptionsFill, 
+  OptionsHistoricalVolumes, 
+  OptionsOpenInterest, 
+  OptionsPosition, 
+  OptionsTrade, 
+  QuoteForMyQuoteRequest, 
+  QuoteRequest, 
+  FundingPayment, 
+  LeveragedToken, 
+  LeveragedTokenBalance, 
+  LeveragedTokenCreationRequest, 
+  LeveragedTokenCreation, 
+  LeveragedTokenRedemptionRequest, 
+  LeveragedTokenRedemption
 } from './types/rest';
 
 export class RestClient {
@@ -524,7 +542,7 @@ export class RestClient {
     return this.requestWrapper.get(`lt/${tokenName}`);
   }
 
-  getLeveragedTokenBalances(): GenericAPIResponse<LeveragedTokenbalance[]> {
+  getLeveragedTokenBalances(): GenericAPIResponse<LeveragedTokenBalance[]> {
     return this.requestWrapper.get(`lt/balances`);
   }
 
@@ -591,7 +609,7 @@ export class RestClient {
     return this.requestWrapper.delete(`options/quotes/${quoteId}`);
   }
 
-  acceptOptionsQuote(quoteId: string): GenericAPIResponse<AcceptedAptionsQuote> {
+  acceptOptionsQuote(quoteId: string): GenericAPIResponse<AcceptedOptionsQuote> {
     return this.requestWrapper.post(`options/quotes/${quoteId}/accept`);
   }
 

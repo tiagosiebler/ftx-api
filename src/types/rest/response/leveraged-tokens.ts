@@ -19,7 +19,7 @@ export interface LeveragedToken {
   changeBod: number;
 }
 
-export interface LeveragedTokenbalance {
+export interface LeveragedTokenBalance {
   token: string;
   balance: number;
 }

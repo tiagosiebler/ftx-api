@@ -1,7 +1,16 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
-
 import { signMessage } from './node-support';
-import { serializeParams, RestClientOptions, FtxDomain, serializeParamPayload, programId, programKey, programId2, isFtxUS, GenericAPIResponse } from './requestUtils';
+import { 
+  serializeParams, 
+  RestClientOptions, 
+  FtxDomain, 
+  serializeParamPayload, 
+  programId, 
+  programKey, 
+  programId2, 
+  isFtxUS, 
+  GenericAPIResponse 
+} from './requestUtils';
 
 type ApiHeaders = 'key' | 'ts' | 'sign' | 'subaccount';
 

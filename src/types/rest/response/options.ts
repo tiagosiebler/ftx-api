@@ -24,17 +24,6 @@ export interface QuoteRequest {
   limitPrice: number;
 }
 
-export interface MyQuoteRequest extends QuoteRequest {
-  quotes: Quote[];
-  hideLimitPrice: boolean;
-  size: number;
-  counterpartyId?: number | null;
-}
-
-export interface CancelledQuoteRequest extends MyQuoteRequest {
-  status: "cancelled"
-}
-
 export interface Quote {
   id: number;
   status: OptionStatus;
@@ -44,6 +33,17 @@ export interface Quote {
   quoteExpiry: string | null;
   /** @example "2020-01-08T22:35:54.626023+00:00" */
   time: string;
+}
+
+export interface MyQuoteRequest extends QuoteRequest {
+  quotes: Quote[];
+  hideLimitPrice: boolean;
+  size: number;
+  counterpartyId?: number | null;
+}
+
+export interface CancelledQuoteRequest extends MyQuoteRequest {
+  status: "cancelled"
 }
 
 export interface QuoteForMyQuoteRequest extends Quote {
@@ -59,7 +59,7 @@ export interface CancelledQuote extends QuoteForMyQuoteRequest {
   state: "cancelled";
 }
 
-export interface AcceptedAptionsQuote extends QuoteForMyQuoteRequest {
+export interface AcceptedOptionsQuote extends QuoteForMyQuoteRequest {
   state: "filled";
 }
 

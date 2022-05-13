@@ -35,7 +35,8 @@ export interface Market {
   bid: number;
   /** @description last traded price */
   last: number;
-  /** @description if the market is in post-only mode (all orders get modified to be post-only, in addition to other settings they may have) */
+  /** @description if the market is in post-only mode (all orders get modified to be post-only,
+   * in addition to other settings they may have) */
   postOnly: boolean;
   /** @description current price */
   price: number
