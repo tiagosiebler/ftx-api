@@ -65,6 +65,14 @@ export interface WithdrawalReq {
   code?: string;
 }
 
+export interface WithdrawalFeeReq {
+  coin: string;
+  size: number;
+  address: string;
+  tag?: string | null;
+  method?: string | null;
+}
+
 export interface NewSavedAddressReq {
   coin: string;
   address: string;

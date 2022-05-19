@@ -84,13 +84,21 @@ export interface WithdrawalHistoryItem {
 
 export type WithdrawalHistory = Array<WithdrawalHistoryItem>;
 
+export interface WithdrawalFee {
+  coin: string;
+  size: number;
+  address: string;
+  tag: null | string;
+}
+
+export type WithdrawalMethod = "erc20" | "trx" | "sol" | "omni" | "bep2" | "bsc" | "ftm" | "avax" | "matic";
 export interface WithdrawalRequest {
   coin: string;
   size: number;
   address: string;
   tag: string | null;
   /** @description blockchain to use for request */
-  method: string;
+  method: WithdrawalMethod | string;
   /** @description withdrawal password if it is required for your account */
   password: string | null;
   /** @description 2fa code if it is required for your account */

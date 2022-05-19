@@ -116,7 +116,9 @@ import {
   LeveragedTokenCreationRequest, 
   LeveragedTokenCreation, 
   LeveragedTokenRedemptionRequest, 
-  LeveragedTokenRedemption
+  LeveragedTokenRedemption,
+  WithdrawalFeeReq,
+  WithdrawalFee
 } from './types/rest';
 
 export class RestClient {
@@ -325,9 +327,14 @@ export class RestClient {
       `wallet/deposit_address/${params.coin}${suffix}`
     );
   }
+  
 
   getDepositHistory(params?: TimeRangeLimit): GenericAPIResponse<DepositHistory> {
     return this.requestWrapper.get('wallet/deposits', params);
+  }
+
+  getWithdrawalFee(params?: WithdrawalFeeReq): GenericAPIResponse<WithdrawalFee> {
+    return this.requestWrapper.get('wallet/withdrawal_fee', params);
   }
 
   getWithdrawalHistory(params?: TimeRangeLimit): GenericAPIResponse<WithdrawalHistory> {
