@@ -488,7 +488,7 @@ export class RestClient {
   }
 
   /** @warning @description undocumented FTX API endpoint */
-  otcHistory(params?: Partial<TimeRange>): GenericAPIResponse<OtcHistory> {
+  getOtcHistory(params?: Partial<TimeRange>): GenericAPIResponse<OtcHistory> {
     return this.requestWrapper.get(`otc/history`, params);
   }
 
