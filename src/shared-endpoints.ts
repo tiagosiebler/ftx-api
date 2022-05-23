@@ -12,7 +12,7 @@ export default abstract class SharedEndpoints {
 
   getOrderBook(params: {
     symbol: string;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/public/orderBook/L2', params);
   }
 
@@ -21,11 +21,11 @@ export default abstract class SharedEndpoints {
    */
   getTickers(params?: {
     symbol?: string;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/public/tickers', params);
   }
 
-  getSymbols(): GenericAPIResponse {
+  getSymbols(): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/public/symbols');
   }
 
@@ -38,7 +38,7 @@ export default abstract class SharedEndpoints {
     limit?: number;
     start_time?: number;
     end_time?: number;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/public/liq-records', params);
   }
 
@@ -52,14 +52,14 @@ export default abstract class SharedEndpoints {
     symbol: string;
     period: string;
     limit?: number;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/public/open-interest', params);
   }
 
   getLatestBigDeal(params: {
     symbol: string;
     limit?: number;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/public/big-deal', params);
   }
 
@@ -67,7 +67,7 @@ export default abstract class SharedEndpoints {
     symbol: string;
     period: string;
     limit?: number;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/public/account-ratio', params);
   }
 
@@ -77,7 +77,7 @@ export default abstract class SharedEndpoints {
    *
    */
 
-  getApiKeyInfo(): GenericAPIResponse {
+  getApiKeyInfo(): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/private/account/api-key');
   }
 
@@ -89,7 +89,7 @@ export default abstract class SharedEndpoints {
 
   getWalletBalance(params: {
     coin?: string;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/private/wallet/balance', params)
   }
 
@@ -101,7 +101,7 @@ export default abstract class SharedEndpoints {
     wallet_fund_type?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/private/wallet/fund/records', params);
   }
 
@@ -112,7 +112,7 @@ export default abstract class SharedEndpoints {
     status?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
   }
 
@@ -120,7 +120,7 @@ export default abstract class SharedEndpoints {
     limit?: number;
     from?: number;
     direction?: string;
-  }): GenericAPIResponse {
+  }): GenericAPIResponse<any> {
     return this.requestWrapper.get('v2/private/exchange-order/list', params);
   }
 

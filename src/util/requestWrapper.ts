@@ -1,7 +1,16 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
-
 import { signMessage } from './node-support';
-import { serializeParams, RestClientOptions, GenericAPIResponse, FtxDomain, serializeParamPayload, programId, programKey, programId2, isFtxUS } from './requestUtils';
+import { 
+  serializeParams, 
+  RestClientOptions, 
+  FtxDomain, 
+  serializeParamPayload, 
+  programId, 
+  programKey, 
+  programId2, 
+  isFtxUS, 
+  GenericAPIResponse 
+} from './requestUtils';
 
 type ApiHeaders = 'key' | 'ts' | 'sign' | 'subaccount';
 
@@ -94,22 +103,22 @@ export default class RequestUtil {
     this.secret = secret;
   }
 
-  get(endpoint: string, params?: any): GenericAPIResponse {
+  get<T>(endpoint: string, params?: any): GenericAPIResponse<T> {
     return this._call('GET', endpoint, params);
   }
 
-  post(endpoint: string, params?: any): GenericAPIResponse {
+  post<T>(endpoint: string, params?: any): GenericAPIResponse<T> {
     return this._call('POST', endpoint, { ...params, [programKey]: isFtxUS(this.options) ? programId : programId2 });
   }
 
-  delete(endpoint: string, params?: any): GenericAPIResponse {
+  delete<T>(endpoint: string, params?: any): GenericAPIResponse<T> {
     return this._call('DELETE', endpoint, params);
   }
 
   /**
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
-  async _call(method: Method, endpoint: string, params?: string | object): GenericAPIResponse {
+  async _call<T>(method: Method, endpoint: string, params?: string | object): GenericAPIResponse<T> {
     const options = {
       ...this.globalRequestOptions,
       method: method,
@@ -230,7 +239,7 @@ export default class RequestUtil {
   /**
    * @private trigger time sync and store promise
    */
-  syncTime(): GenericAPIResponse {
+  syncTime(): Promise<boolean> {
     if (this.options.disable_time_sync === true) {
       return Promise.resolve(false);
     }
@@ -253,7 +262,7 @@ export default class RequestUtil {
   async getTimeOffset(): Promise<number> {
     const start = Date.now();
     try {
-      const response = await this.get('https://otc.ftx.com/api/time');
+      const response = await this.get<string>('https://otc.ftx.com/api/time');
       const result = new Date(response.result).getTime();
       const end = Date.now();
 

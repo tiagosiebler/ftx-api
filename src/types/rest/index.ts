@@ -1,10 +1,6 @@
-export type OrderSide = 'buy' | 'sell';
-export type OrderType = 'market' | 'limit';
-export type ConditionalOrderType = 'stop' | 'trailing_stop' | 'take_profit';
-export type ConditionalOrderTypeNoUnderscore =
-  | 'stop'
-  | 'trailingStop'
-  | 'takeProfit';
+import { ConditionalOrderType, ConditionalOrderTypeNoUnderscore, OrderSide, OrderType } from "./response/orders";
+
+export * from "./response";
 
 export interface TimeRange {
   start_time?: number;
@@ -13,11 +9,6 @@ export interface TimeRange {
 
 export interface TimeRangeLimit extends TimeRange {
   limit?: number;
-}
-
-export interface APIResponse<T> {
-  success: boolean;
-  result: T;
 }
 
 export interface ChangeSubNameReq {
@@ -72,6 +63,14 @@ export interface WithdrawalReq {
   tag?: string;
   password?: string;
   code?: string;
+}
+
+export interface WithdrawalFeeReq {
+  coin: string;
+  size: number;
+  address: string;
+  tag?: string | null;
+  method?: string | null;
 }
 
 export interface NewSavedAddressReq {
@@ -227,109 +226,3 @@ export interface EditNftGallerySettingsReq {
   public: boolean;
 }
 
-export type FuturesCoinType = 'perpetual' | 'future' | 'prediction' | 'move';
-export type FuturesCoinGroup = 'perpetual' | 'quarterly' | 'prediction';
-
-export interface FuturesCoin {
-  name: string;
-  underlying: string;
-  description: string;
-  type: FuturesCoinType;
-  expiry: null | string;
-  perpetual: boolean;
-  expired: false;
-  enabled: true;
-  postOnly: false;
-  priceIncrement: number;
-  sizeIncrement: number;
-  last: number;
-  bid: number;
-  ask: number;
-  index: number;
-  mark: number;
-  imfFactor: number;
-  lowerBound: number;
-  upperBound: number;
-  underlyingDescription: string;
-  expiryDescription: string;
-  moveStart: null;
-  marginPrice: number;
-  positionLimitWeight: number;
-  group: FuturesCoinGroup;
-  change1h: number;
-  change24h: number;
-  changeBod: number;
-  volumeUsd24h: number;
-  volume: number;
-  openInterest: number;
-  openInterestUsd: number;
-}
-
-export interface FuturesPosition {
-  future: string;
-  size: number;
-  side: OrderSide;
-  netSize: number;
-  longOrderSize: number;
-  shortOrderSize: number;
-  cost: number;
-  entryPrice: null | number;
-  unrealizedPnl: number;
-  realizedPnl: number;
-  initialMarginRequirement: number;
-  maintenanceMarginRequirement: number;
-  openSize: number;
-  collateralUsed: number;
-  estimatedLiquidationPrice: null | number;
-  recentAverageOpenPrice: null | number;
-  recentPnl: null | number;
-  recentBreakEvenPrice: null | number;
-  cumulativeBuySize: null | number;
-  cumulativeSellSize: null | number;
-}
-
-export interface ActiveFuturesPosition extends FuturesPosition {
-  estimatedLiquidationPrice: number;
-  recentAverageOpenPrice: number;
-  recentPnl: number;
-  recentBreakEvenPrice: number;
-  cumulativeBuySize: number;
-  cumulativeSellSize: number;
-}
-
-export interface Balance {
-  coin: string;
-  total: number;
-  free: number;
-  availableWithoutBorrow: number;
-  usdValue: number;
-  spotBorrow: number;
-}
-
-// TOOD: define fields marked as any
-export interface AccountSummary {
-  accountIdentifier: number;
-  username: string;
-  collateral: number;
-  freeCollateral: number;
-  totalAccountValue: number;
-  totalPositionSize: number;
-  initialMarginRequirement: number;
-  maintenanceMarginRequirement: number;
-  marginFraction: null | any;
-  openMarginFraction: null | any;
-  liquidating: boolean;
-  backstopProvider: boolean;
-  positions: any[];
-  takerFee: number;
-  makerFee: number;
-  leverage: number;
-  futuresLeverage: number;
-  positionLimit: null | any;
-  positionLimitUsed: null | any;
-  useFttCollateral: boolean;
-  chargeInterestOnNegativeUsd: boolean;
-  spotMarginEnabled: boolean;
-  spotLendingEnabled: boolean;
-  accountType: null | any;
-}

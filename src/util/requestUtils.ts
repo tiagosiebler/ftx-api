@@ -57,7 +57,10 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   reconnectTimeout: number;
 };
 
-export type GenericAPIResponse = Promise<any>;
+export type GenericAPIResponse<T> = Promise<{
+  success: boolean;
+  result: T;
+}>;
 
 export function serializeParams(params: object = {}, strict_validation = false): string {
   return Object.keys(params)
