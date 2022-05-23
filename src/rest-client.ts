@@ -149,9 +149,20 @@ export class RestClient {
     return this;
   }
 
+  /** expose low level api methods */
+  api() {
+    return {
+      get: this.requestWrapper.get,
+      post: this.requestWrapper.post,
+      delete: this.requestWrapper.delete,
+    }
+  }
+
   /**
    * Misc possible undocumented endpoints - these may not always work
    **/
+
+
 
   getRebateHistory(): GenericAPIResponse<unknown> {
     return this.requestWrapper.get('referral_rebate_history');
