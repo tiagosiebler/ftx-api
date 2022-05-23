@@ -59,18 +59,18 @@ import {
   TriggerOrderHistoryReq,
   UnstakeRequests,
   WithdrawalReq,
-  AllNftTrades, 
-  NftAccountInfo, 
-  NftBalances, 
-  NftCollections, 
-  NftDeposits, 
-  NftFills, 
-  NftGallery, 
-  NftGallerySettings, 
-  NftInfo, 
-  NftList, 
-  NftRedemption, 
-  NftTrades, 
+  AllNftTrades,
+  NftAccountInfo,
+  NftBalances,
+  NftCollections,
+  NftDeposits,
+  NftFills,
+  NftGallery,
+  NftGallerySettings,
+  NftInfo,
+  NftList,
+  NftRedemption,
+  NftTrades,
   NftWithdrawals,
   Coins,
   BalancesAllAccounts,
@@ -97,28 +97,29 @@ import {
   LendingInfo,
   LendingHistory,
   Fills,
-  AcceptedOptionsQuote, 
-  CancelledQuote, 
-  CancelledQuoteRequest, 
-  MyQuoteRequest, 
-  Options24hVolume, 
-  OptionsAccountInfo, 
-  OptionsFill, 
-  OptionsHistoricalVolumes, 
-  OptionsOpenInterest, 
-  OptionsPosition, 
-  OptionsTrade, 
-  QuoteForMyQuoteRequest, 
-  QuoteRequest, 
-  FundingPayment, 
-  LeveragedToken, 
-  LeveragedTokenBalance, 
-  LeveragedTokenCreationRequest, 
-  LeveragedTokenCreation, 
-  LeveragedTokenRedemptionRequest, 
+  AcceptedOptionsQuote,
+  CancelledQuote,
+  CancelledQuoteRequest,
+  MyQuoteRequest,
+  Options24hVolume,
+  OptionsAccountInfo,
+  OptionsFill,
+  OptionsHistoricalVolumes,
+  OptionsOpenInterest,
+  OptionsPosition,
+  OptionsTrade,
+  QuoteForMyQuoteRequest,
+  QuoteRequest,
+  FundingPayment,
+  LeveragedToken,
+  LeveragedTokenBalance,
+  LeveragedTokenCreationRequest,
+  LeveragedTokenCreation,
+  LeveragedTokenRedemptionRequest,
   LeveragedTokenRedemption,
   WithdrawalFeeReq,
-  WithdrawalFee
+  WithdrawalFee,
+  OtcHistory
 } from './types/rest';
 
 export class RestClient {
@@ -327,7 +328,7 @@ export class RestClient {
       `wallet/deposit_address/${params.coin}${suffix}`
     );
   }
-  
+
 
   getDepositHistory(params?: TimeRangeLimit): GenericAPIResponse<DepositHistory> {
     return this.requestWrapper.get('wallet/deposits', params);
@@ -473,6 +474,11 @@ export class RestClient {
 
   acceptQuote(quoteId: string): GenericAPIResponse<null> {
     return this.requestWrapper.post(`otc/quotes/${quoteId}/accept`);
+  }
+
+  /** @warning @description undocumented FTX API endpoint */
+  otcHistory(): GenericAPIResponse<OtcHistory> {
+    return this.requestWrapper.get(`otc/history`);
   }
 
   /**

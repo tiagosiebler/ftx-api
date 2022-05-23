@@ -13,3 +13,4 @@ export * from "./options";
 export * from "./spot-margin";
 export * from "./fills";
 export * from "./leveraged-tokens";
+export * from "./otc";
