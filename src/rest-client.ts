@@ -96,6 +96,10 @@ export class RestClient {
   acceptDust(quoteId: string): GenericAPIResponse {
     return this.requestWrapper.post(`dust/quotes/${quoteId}/accept`);
   }
+  
+  getUsdValueSnapshots(limit: number = 1000): GenericAPIResponse {
+    return this.requestWrapper.get(`wallet/usd_value_snapshots?${limit}`);
+  }
 
   /**
    *
