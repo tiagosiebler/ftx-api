@@ -185,8 +185,12 @@ export class RestClient {
     return this.requestWrapper.get(`futures/${futureName}/stats`);
   }
 
-  getFundingRates(): GenericAPIResponse {
-    return this.requestWrapper.get('funding_rates');
+  getFundingRates(params?: {
+    future?: string;
+    start_time?: number;
+    end_time?: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('funding_rates', params);
   }
 
   getIndexWeights(futuresIndexName: string): GenericAPIResponse {

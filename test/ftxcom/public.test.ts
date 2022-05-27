@@ -1,8 +1,8 @@
-import { RestClient } from "../../src/rest-client";
-import { successResponseList } from "../response.util";
+import { RestClient } from '../../src/rest-client';
+import { successResponseList } from '../response.util';
 
 describe('FTX.com public endpoints', () => {
-  const api = new RestClient();
+  const api = new RestClient(undefined, undefined, { disable_time_sync: true });
 
   const publicMethods = [
     'getMarkets',
@@ -27,5 +27,12 @@ describe('FTX.com public endpoints', () => {
         error: 'Not logged in',
       },
     });
+  });
+
+  it('getFundingRates()', async () => {
+    expect(await api.getFundingRates()).toMatchObject(successResponseList());
+    expect(await api.getFundingRates({ future: 'DOGE-PERP' })).toMatchObject(
+      successResponseList()
+    );
   });
 });
