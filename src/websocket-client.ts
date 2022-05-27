@@ -373,8 +373,8 @@ export class WebsocketClient extends EventEmitter {
   private onWsClose(event, wsKey: string) {
     this.logger.info('Websocket connection closed', { ...loggerCategory, wsKey});
 
-    if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CLOSING) {
-      if (this.options.reconnect) this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
+    if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CLOSING && this.options.reconnectOnClose) {
+      this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
       this.emit('reconnect');
     } else {
       this.setWsState(wsKey, READY_STATE_INITIAL);
