@@ -50,7 +50,7 @@ export class WebsocketClient extends EventEmitter {
       pongTimeout: 7500,
       pingInterval: 10000,
       reconnectTimeout: 500,
-      reconnect: true,
+      reconnectOnClose: true,
       ...options
     };
 

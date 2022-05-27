@@ -56,6 +56,7 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   pongTimeout: number;
   pingInterval: number;
   reconnectTimeout: number;
+  reconnectOnClose: boolean,
 };
 
 export type GenericAPIResponse = Promise<any>;
