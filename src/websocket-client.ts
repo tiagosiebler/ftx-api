@@ -50,6 +50,7 @@ export class WebsocketClient extends EventEmitter {
       pongTimeout: 7500,
       pingInterval: 10000,
       reconnectTimeout: 500,
+      reconnectOnClose: true,
       ...options
     };
 
@@ -372,7 +373,7 @@ export class WebsocketClient extends EventEmitter {
   private onWsClose(event, wsKey: string) {
     this.logger.info('Websocket connection closed', { ...loggerCategory, wsKey});
 
-    if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CLOSING) {
+    if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CLOSING && this.options.reconnectOnClose) {
       this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
       this.emit('reconnect');
     } else {

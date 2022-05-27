@@ -42,6 +42,7 @@ export interface WSClientConfigurableOptions {
   reconnectTimeout?: number;
   restOptions?: RestClientOptions;
   requestOptions?: AxiosRequestConfig;
+  reconnectOnClose?: boolean;
 
   // Optionally override websocket API protocol + domain
   // E.g: 'wss://ftx.com/ws/'
@@ -55,6 +56,7 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   pongTimeout: number;
   pingInterval: number;
   reconnectTimeout: number;
+  reconnectOnClose: boolean,
 };
 
 export type GenericAPIResponse = Promise<any>;
