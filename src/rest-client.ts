@@ -97,8 +97,14 @@ export class RestClient {
     return this.requestWrapper.post(`dust/quotes/${quoteId}/accept`);
   }
   
-  getUsdValueSnapshots(limit: number = 1000): GenericAPIResponse {
-    return this.requestWrapper.get(`wallet/usd_value_snapshots?${limit}`);
+  /**
+   * Returns a list of historical USD balance snapshots taken every 4 hours.
+   * 
+   * Note: undocumented
+   * @param limit Number of days
+   */
+  getUsdValueSnapshots(limit: number = 10_000): GenericAPIResponse {
+    return this.requestWrapper.get(`wallet/usd_value_snapshots`, { limit });
   }
 
   /**
