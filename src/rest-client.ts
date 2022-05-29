@@ -96,6 +96,16 @@ export class RestClient {
   acceptDust(quoteId: string): GenericAPIResponse {
     return this.requestWrapper.post(`dust/quotes/${quoteId}/accept`);
   }
+  
+  /**
+   * Returns a list of historical USD balance snapshots taken every 4 hours.
+   * 
+   * Note: undocumented
+   * @param limit Number of days
+   */
+  getUsdValueSnapshots(limit: number = 10_000): GenericAPIResponse {
+    return this.requestWrapper.get(`wallet/usd_value_snapshots`, { limit });
+  }
 
   /**
    *
