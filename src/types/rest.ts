@@ -72,6 +72,7 @@ export interface WithdrawalReq {
   tag?: string;
   password?: string;
   code?: string;
+  method: string;
 }
 
 export interface NewSavedAddressReq {
