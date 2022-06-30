@@ -16,6 +16,17 @@ Node.js connector for the FTX APIs and WebSockets, with TypeScript & browser sup
 - Issues? Check the [issues tab](https://github.com/tiagosiebler/ftx-api/issues).
 - Discuss & collaborate with other node devs? Join our [Node.js Algo Traders](https://t.me/nodetraders) engineering community on telegram.
 
+## Related projects
+Check out my related projects:
+- Try my connectors:
+  - [ftx-api](https://www.npmjs.com/package/ftx-api)
+  - [bybit-api](https://www.npmjs.com/package/bybit-api)
+  - [binance](https://www.npmjs.com/package/binance)
+- Try my misc utilities:
+  - [orderbooks](https://www.npmjs.com/package/orderbooks)
+- Check out my examples:
+  - [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples)
+
 ## Documentation
 Most methods accept JS objects, except for methods with only one parameter. These can be populated using parameters specified by FTX's API documentation.
 - [FTX REST API Documentation](https://docs.ftx.com/#rest-api).
