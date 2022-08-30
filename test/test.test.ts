@@ -31,4 +31,19 @@ describe('FTX.us private endpoints', () => {
     const otcHistory = await api.getOtcHistory();
     expect(otcHistory.result.length).toBeGreaterThanOrEqual(1);
   });
+
+  it('should get fiat deposit instructions', async () => {
+    const instructions = await api.getFiatDepositInstructions("USD");
+    expect(instructions.result.memo.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('should create fiat deposit', async () => {
+    const deposit = await api.createFiatDeposit({
+      currency: "USD",
+      size: 50
+    });
+
+    expect(deposit.result.size).toEqual(50)
+  }
+  );
 });

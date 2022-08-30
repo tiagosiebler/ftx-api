@@ -56,6 +56,12 @@ export interface DepositAddressReq {
   method?: string;
 }
 
+export interface CreateFiatDepositReq {
+  size: number;
+  currency: string;
+  notes?: string;
+}
+
 export interface WithdrawalReq {
   coin: string;
   size: number;

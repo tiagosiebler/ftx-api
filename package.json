@@ -1,6 +1,6 @@
 {
   "name": "ftx-api-typed",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Node.js/typescript connector for FTX's REST APIs and WebSockets",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -24,6 +24,7 @@
   "dependencies": {
     "axios": "^0.21.4",
     "dotenv": "^16.0.1",
+    "form-data": "^4.0.0",
     "isomorphic-ws": "^4.0.1",
     "ws": "^7.4.0"
   },

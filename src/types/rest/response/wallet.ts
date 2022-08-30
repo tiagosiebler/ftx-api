@@ -123,3 +123,46 @@ export interface SavedAddress {
   tag: string | null
   whitelisted: boolean;
 }
+
+export interface FiatDepositInstructions {
+  instructions: {
+    "Wire Transfer": {
+      "Where to Send Money (Beneficiary Account)": Array<{
+        name: string;
+        value: string;
+      }>;
+      "Receiving Bank"?: Array<{
+        name: string;
+        value: string;
+      }>;
+      transferInfo: {
+        listAsBank: boolean;
+        partner?: any;
+        collapse?: any;
+        requiresTaxId: boolean;
+        requiresProof: boolean;
+        disabled: boolean;
+        longNote: string;
+        titleNote?: string | null;
+        memoOverride?: null | string;
+      };
+    };
+  };
+  memo: string;
+  shortMemo?: string | null;
+}
+
+export interface FiatDeposit {
+  id: number;
+  coin: string;
+  size: number;
+  status: string;
+  time: string;
+  confirmedTime?: null | string;
+  uploadedFile?: any;
+  uploadedFileName?: null | string;
+  cancelReason?: string;
+  fiat: boolean;
+  ach: boolean;
+  type: string;
+}

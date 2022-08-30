@@ -1,4 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import FormData from 'form-data';
 import { signMessage } from './node-support';
 import { 
   serializeParams, 
@@ -53,6 +54,7 @@ export default class RequestUtil {
   private globalRequestOptions: AxiosRequestConfig;
   private key: string | undefined;
   private secret: string | undefined;
+  private axiosInstance: AxiosInstance;
 
   constructor(
     key: string | undefined,
@@ -60,7 +62,9 @@ export default class RequestUtil {
     baseUrl: string,
     options: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {},
+    axiosInstance: AxiosInstance
   ) {
+    this.axiosInstance = axiosInstance;
     this.timeOffset = null;
     this.syncTimePromise = null;
     this.options = {
@@ -111,6 +115,13 @@ export default class RequestUtil {
     return this._call('POST', endpoint, { ...params, [programKey]: isFtxUS(this.options) ? programId : programId2 });
   }
 
+  postFormData<T>(endpoint: string, formData?: FormData): GenericAPIResponse<T> {
+    const headers = formData?.getHeaders() || {};
+    return this._call('POST', endpoint, formData, {
+      ...headers,
+    })
+  }
+
   delete<T>(endpoint: string, params?: any): GenericAPIResponse<T> {
     return this._call('DELETE', endpoint, params);
   }
@@ -118,12 +129,21 @@ export default class RequestUtil {
   /**
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
-  async _call<T>(method: Method, endpoint: string, params?: string | object): GenericAPIResponse<T> {
-    const options = {
+  async _call<T>(method: Method, endpoint: string, params?: string | object, headers?: AxiosRequestConfig["headers"]): GenericAPIResponse<T> {
+    let options = {
       ...this.globalRequestOptions,
       method: method,
-      json: true
+      json: true,
     };
+
+    options = {
+      ...options,
+      headers: {
+        ...options.headers,
+        ...headers
+      }
+    }
+    
 
     options.url = endpoint.startsWith('https') ? endpoint : [this.baseUrl, endpoint].join('/');
 
@@ -147,7 +167,9 @@ export default class RequestUtil {
       options.data = params;
     }
 
-    return axios(options).then(response => {
+    console.log(options)
+
+    return this.axiosInstance(options).then(response => {
       if (response.status == 200) {
         return response.data;
       }

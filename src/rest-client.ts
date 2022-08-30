@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import {
   GenericAPIResponse,
   getRestBaseUrl,
@@ -119,8 +119,12 @@ import {
   LeveragedTokenRedemption,
   WithdrawalFeeReq,
   WithdrawalFee,
-  OtcHistory
+  OtcHistory,
+  FiatDepositInstructions,
+  CreateFiatDepositReq,
+  FiatDeposit
 } from './types/rest';
+import FormData from "form-data";
 
 export class RestClient {
   protected requestWrapper: RequestWrapper;
@@ -137,14 +141,16 @@ export class RestClient {
     key?: string | undefined,
     secret?: string | undefined,
     restClientOptions: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
+    requestOptions: AxiosRequestConfig = {},
+    axiosInstance = axios.create()
   ) {
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
       getRestBaseUrl(restClientOptions),
       restClientOptions,
-      requestOptions
+      requestOptions,
+      axiosInstance
     );
     return this;
   }
@@ -373,6 +379,20 @@ export class RestClient {
     return this.requestWrapper.delete(
       `wallet/saved_addresses/${savedAddressId}`
     );
+  }
+
+  getFiatDepositInstructions(currency: string): GenericAPIResponse<FiatDepositInstructions> {
+    return this.requestWrapper.get(`wallet/${currency}/v2/fiat_deposit_instructions`);
+  }
+
+  createFiatDeposit(params: CreateFiatDepositReq): GenericAPIResponse<FiatDeposit> {
+    const form = new FormData();
+    Object.entries(params).forEach(([key, val]) => form.append(key, val));
+    return this.requestWrapper.post(`https://ftx.us/api/wallet/fiat_deposits`, params);
+  }
+
+  deleteFiatDeposit(id: string | number): GenericAPIResponse<"Success"> {
+    return this.requestWrapper.delete(`wallet/fiat_deposits/${id}`);
   }
 
   /**
