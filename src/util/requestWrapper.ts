@@ -167,8 +167,6 @@ export default class RequestUtil {
       options.data = params;
     }
 
-    console.log(options)
-
     return this.axiosInstance(options).then(response => {
       if (response.status == 200) {
         return response.data;
