@@ -21,9 +21,9 @@ jobs:
       - run:
           name: Run Build
           command: npm run build
-      - run:
-          name: Run Tests
-          command: npm run test
+      # - run:
+      #     name: Run Tests
+      #     command: npm run test
 
 workflows:
   integrationtests:
